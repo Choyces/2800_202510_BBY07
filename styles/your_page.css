@@ -1,0 +1,100 @@
+body {
+  background-color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  background: linear-gradient(to right, #ff9adb, #c8d6ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 2rem;
+}
+
+.post-card .card {
+  border-radius: 20px;
+  background-color: white;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.post-card .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.post-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2a4d8f;
+  margin-bottom: 0.5rem;
+}
+
+.post-description {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+.view-btn,
+.edit-btn,
+.delete-btn {
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 8px 16px;
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.view-btn {
+  border: 2px solid #28a745;
+  color: #28a745;
+  transition: all 0.3s ease;
+}
+
+.view-btn:hover {
+  background-color: #72db8a;
+  color: white;
+  transform: scale(1.05);
+}
+
+.edit-btn {
+  border: 2px solid #8a65ff;
+  color: #8a65ff;
+}
+
+.edit-btn:hover {
+  background-color: #8a65ff;
+  color: white;
+  transform: scale(1.05);
+}
+
+.delete-btn {
+  border: 2px solid #ff6b6b;
+  color: #ff6b6b;
+}
+
+.delete-btn:hover {
+  background-color: #ff6b6b;
+  color: white;
+  transform: scale(1.05);
+}
+
+
+@media (max-width: 768px) {
+  .post-title {
+    font-size: 1rem;
+  }
+
+  .view-btn,
+  .edit-btn,
+  .delete-btn {
+    font-size: 0.8rem;
+    padding: 6px 14px;
+  }
+}

@@ -1,0 +1,79 @@
+
+        body {
+          background-color: #ffffff;
+          color: #333;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    
+        #searchFeedback {
+          font-size: 1.5rem;
+          font-weight: bold;
+          background: linear-gradient(to right, #ff8ae2, #a3e0ff);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          text-align: center;
+        }
+    
+        #posts-go-here {
+          padding-bottom: 80px;
+        }
+    
+        .card {
+          border-radius: 20px;
+          border: 1px solid #f0f0f0;
+          transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+    
+        .card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+        }
+    
+        .card-body {
+          padding: 1.2rem;
+        }
+    
+        .card-title {
+          font-size: 1.3rem;
+          color: #2a4d8f;
+          font-weight: bold;
+        }
+    
+        .card-text {
+          font-size: 1rem;
+          color: #666;
+          margin-bottom: 1rem;
+        }
+    
+        .card-author,
+        .card-date {
+          font-size: 0.85rem;
+          color: #555;
+        }
+    
+        .view-post-button {
+          border-radius: 30px;
+          font-weight: bold;
+          font-size: 0.95rem;
+          transition: 0.3s;
+          border: 2px solid #6c63ff;
+          color: #6c63ff;
+          background-color: white;
+        }
+    
+        .view-post-button:hover {
+          background-color: #6c63ff;
+          color: white;
+          transform: scale(1.05);
+        }
+    
+        @media (max-width: 768px) {
+          .card-title {
+            font-size: 1.1rem;
+          }
+    
+          .view-post-button {
+            font-size: 0.9rem;
+          }
+        }

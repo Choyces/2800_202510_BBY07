@@ -1,0 +1,87 @@
+.container {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 4rem;
+  margin-top: 10vh;
+  max-width: 600px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.5s ease;
+}
+
+
+h1 {
+  font-size: 2.8rem;
+  font-weight: bold;
+  background: linear-gradient(to right, #ff8ae2, #8a2be2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 1rem;
+}
+
+
+.rounded-circle {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  margin: 0 auto;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.rounded-circle:hover {
+  transform: scale(1.05);
+}
+
+.responsive {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  border-radius: 30px;
+  padding: 14px 28px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 20px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-warning:hover {
+  background-color: #ffa000;
+  transform: scale(1.05);
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.2rem;
+  }
+
+  .rounded-circle {
+    width: 140px;
+    height: 140px;
+  }
+
+  .btn-warning {
+    font-size: 1rem;
+    padding: 12px 24px;
+  }
+}
