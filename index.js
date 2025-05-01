@@ -1,0 +1,107 @@
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://justinrchik:wMwHIRYylfhw2NQ2@cluster0.ztyzxn3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+async function run() {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+}
+run().catch(console.dir);
+
+
+// REQUIRES
+const express = require("express");
+const app = express();
+app.use(express.json());
+const fs = require("fs");
+
+// just like a simple web server like Apache web server
+// we are mapping file system paths to the app's virtual paths
+app.use("/js", express.static("./scripts"));
+app.use("/css", express.static("./styles"));
+app.use("/img", express.static("./image"));
+
+app.get("/", function(req, res) {
+    //console.log(process.env);
+    // retrieve and send an HTML document from the file system
+    let doc = fs.readFileSync("./index.html", "utf8");
+    res.send(doc);
+});
+
+app.get("/hello", function (req, res) {
+    // just send some plain text
+    res.send("Hello world!");
+});
+
+app.get("/helloHTML", function (req, res) {
+    // hard-coded HTML
+  let d = new Date();
+    res.send("<html><head>" + d + "<title>Hi!</title></head><body><p>Hello!</p></body></html>");
+});
+
+app.get("/profile", function (req, res) {
+
+    let doc = fs.readFileSync("./app/html/profile.html", "utf8");
+
+    // just send the text stream
+    res.send(doc);
+
+});
+
+app.get("/schedule", function (req, res) {
+
+    let doc = fs.readFileSync("./app/data/cstschedule.xml", "utf8");
+
+    // just send the text stream
+    res.send(doc);
+
+});
+
+app.get("/lists", function (req, res) {
+
+    let doc = fs.readFileSync("./app/data/lists.js", "utf8");
+
+    // just send the text stream
+    res.send(doc);
+
+});
+
+app.get("/date", function (req, res) {
+
+    // set the type of response:
+    res.setHeader("Content-Type", "application/json");
+    let options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+    let d = new Date();
+
+    res.send({ currentTime: d.toLocaleDateString("en-US", options) });
+
+});
+
+// for resource not found (i.e., 404)
+app.use(function (req, res, next) {
+    // this could be a separate file too - but you'd have to make sure that you have the path
+    // correct, otherewise, you'd get a 404 on the 404 (actually a 500 on the 404)
+    res.status(404).send("<html><head><title>Page not found!</title></head><body><p>Nothing here.</p></body></html>");
+});
+
+// RUN SERVER
+let port = 8000;
+app.listen(port, function () {
+    console.log("Example app listening on port " + port + "!");
+});
