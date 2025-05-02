@@ -44,22 +44,18 @@ app.get("/", function(req, res) {
     res.send(doc);
 });
 
-app.get("/hello", function (req, res) {
-    // just send some plain text
-    res.send("Hello world!");
+app.get("/main", function (req, res) {
+    let doc = fs.readFileSync("./text/main.html", "utf8");
+    res.send(doc);
 });
 
-app.get("/helloHTML", function (req, res) {
-    // hard-coded HTML
-  let d = new Date();
-    res.send("<html><head>" + d + "<title>Hi!</title></head><body><p>Hello!</p></body></html>");
+app.get("/login", function (req, res) {
+    let doc = fs.readFileSync("./text/login.html", "utf8");
+    res.send(doc);
 });
 
 app.get("/profile", function (req, res) {
-
-    let doc = fs.readFileSync("./app/html/profile.html", "utf8");
-
-    // just send the text stream
+    let doc = fs.readFileSync("./text/profile.html", "utf8");
     res.send(doc);
 
 });
