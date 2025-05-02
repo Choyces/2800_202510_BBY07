@@ -1,5 +1,8 @@
+require('dotenv').config()
+console.log(process.env.MONGODB_USER);
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://USER:PASSWORD@cluster0.ztyzxn3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.ztyzxn3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+console.log("URI:", uri);
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -23,6 +26,7 @@ async function run() {
   }
 }
 run().catch(console.dir);
+console.log("URI:", uri);
 
 
 // REQUIRES
@@ -60,9 +64,9 @@ app.get("/profile", function (req, res) {
 
 });
 
-app.get("/schedule", function (req, res) {
+app.get("/about", function (req, res) {
 
-    let doc = fs.readFileSync("./app/data/cstschedule.xml", "utf8");
+    let doc = fs.readFileSync("./about.html", "utf8");
 
     // just send the text stream
     res.send(doc);
