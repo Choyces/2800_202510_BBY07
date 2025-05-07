@@ -47,6 +47,7 @@ app.use("/js", express.static("./scripts"));
 app.use("/css", express.static("./styles"));
 app.use("/img", express.static("./image"));
 app.use('/text', express.static(path.join(__dirname, '..', 'text'))); 
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 const routesPath = path.join(__dirname, 'routes'); 
 fs.readdirSync(routesPath)
