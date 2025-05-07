@@ -51,10 +51,15 @@
     <!-- the body of your page goes here -->
     <h1>Signup</h1>
     <form action="/submitUser" method="POST">
+    <label for="name">Name:</label><br>
+    <input id="name" name="name" type="text" placeholder="Full name" required><br><br>
+    <label for="username">Username:</label><br>
+    <input id="username" name="username" type="text" placeholder="Username" required><br><br>
     <label>Email:</label>
     <input name='email' type='text' placeholder='email' required>
     <label>Password:</label>
     <input name='password' type='password' placeholder='password'> <br>
+
     <button type="submit">Signup </button>
     <p>Already have an account? <a href="/login">Login</a></p>
     </form>

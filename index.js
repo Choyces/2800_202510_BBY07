@@ -1,5 +1,6 @@
 require('dotenv').config()
 const fs = require('fs');
+const path = require('path'); 
 const Joi = require("joi");
 const express = require('express');
 const session = require('express-session');
@@ -20,10 +21,8 @@ const mongodb_database = process.env.MONGODB_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-var {database} = require('./databaseconnection');
-
-const userCollection = database.db(mongodb_database).collection('users');
-
+const { client, db } = require('./databaseconnection'); 
+const userCollection = db.collection('users');
 
 var mongoStore = MongoStore.create({
 	mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/sessions`,
@@ -31,7 +30,6 @@ var mongoStore = MongoStore.create({
 		secret: mongodb_session_secret
 	}
 })
-
 
 // REQUIRES
 const app = express();
@@ -48,9 +46,17 @@ app.use(session({
 app.use("/js", express.static("./scripts"));
 app.use("/css", express.static("./styles"));
 app.use("/img", express.static("./image"));
+app.use('/text', express.static(path.join(__dirname, '..', 'text'))); 
+
+const routesPath = path.join(__dirname, 'routes'); 
+fs.readdirSync(routesPath)
+  .filter(file => file.endsWith('.js'))
+  .forEach(file => {
+    const router = require(path.join(routesPath, file)); 
+    app.use('/', router);                               
+  });
 
 app.get("/", function(req, res) {
-
     let doc = fs.readFileSync("./index.html", "utf8");
     res.send(doc);
 });
@@ -70,35 +76,68 @@ app.get("/login", function (req, res) {
 //signup route
 app.post('/submitUser', async (req,res) => {
   console.log("creating user");
-  var email = req.body.email;
-  var password = req.body.password;
-
-const schema = Joi.object(
-  {
-    email: Joi.string().max(20).required(),
-    password: Joi.string().max(20).required()
-  });
-
-const validationResult = schema.validate({email, password});
-if (validationResult.error != null) {
-   console.log(validationResult.error);
-   
-   res.redirect("/signup");
-   return;
- }
-
-  var hashedPassword = await bcrypt.hash(password, saltRounds);
-
-await userCollection.insertOne({email: email, password: hashedPassword});
-console.log("Inserted user");
-
-  var html = `
-  successfully created user!!!!
-      <form action="/login">
-      <input type="submit" value="login" />
-  </form>
-  `;
-  res.send(html);
+  try {
+    const {
+      name,
+      username,
+      email,
+      password,
+      dob,        
+      location
+    } = req.body;
+  
+    const schema = Joi.object({
+      name:   Joi.string().max(50).required(),
+      username:    Joi.string().alphanum().min(3).max(30).required(),
+      email:       Joi.string().email().required(),
+      password:    Joi.string().min(3).max(20).required(),
+      dob:         Joi.date().iso().optional(),
+      location:    Joi.string().max(100).optional()
+    });
+  
+    const validationResult = schema.validate({ name, username, email, password, dob, location });
+    if (validationResult.error != null) {
+      console.log(validationResult.error);
+      
+      res.redirect("/signup");
+      return;
+    }
+    var hashedPassword = await bcrypt.hash(password, saltRounds);
+    const newUser = {
+      name,
+      username,
+      email,
+      hashedPassword,                
+      dob:      dob ? new Date(dob) : undefined,
+      location: location || '',
+      bio:       '',
+      avatarUrl: '',
+      privacySettings: {
+        notificationsEnabled: true,
+        profilePublic:        true
+      },
+      posts: [],
+      reels: [],
+      followers:   [],
+      following:   [],
+      savedTerms:  [],
+      savedPosts:  []
+    };
+    await userCollection.insertOne(newUser);
+    console.log("Inserted user");
+  
+      var html = `
+      successfully created user!!!!
+          <form action="/login">
+          <input type="submit" value="login" />
+      </form>
+      `;
+      res.send(html);
+  } 
+  catch (err) {
+    console.error("Error in /submitUser:", err);
+    return res.status(500).send("Oops—something went wrong.");
+  }
 });
 
 // Login route
@@ -118,7 +157,7 @@ if (validationResult.error != null) {
    return;
 }
 
-const result = await userCollection.find({email: email}).project({email: 1, password: 1, _id: 1}).toArray();
+const result = await userCollection.find({email: email}).project({email: 1, hashedPassword: 1, _id: 1}).toArray();
 
 console.log(result);
 if (result.length != 1) {
@@ -129,10 +168,12 @@ if (result.length != 1) {
      res.send(html);
   return;
 }
-if (await bcrypt.compare(password, result[0].password)) {
+if (await bcrypt.compare(password, result[0].hashedPassword)) {
   console.log("correct password");
   req.session.authenticated = true;
   req.session.email = email;
+  req.session.cookie.maxAge = expireTime;
+  req.session.userId        = result[0]._id.toString();
   req.session.cookie.maxAge = expireTime;
 
   res.redirect('/main');
