@@ -126,14 +126,27 @@ app.post('/submitUser', async (req,res) => {
     };
     await userCollection.insertOne(newUser);
     console.log("Inserted user");
-  
-      var html = `
-      successfully created user!!!!
-          <form action="/login">
-          <input type="submit" value="login" />
-      </form>
-      `;
-      res.send(html);
+
+    const html = `
+    <html>
+    <head>
+      <title>User Created</title>
+      <link rel="stylesheet" href="/css/success.css">
+    </head>
+    <body>
+      <div class="success-container">
+        <h1>Account Created Successfully!</h1>
+        <p>Your account has been created. <br> You can now log in.</p>
+        <form action="/login">
+          <button type="submit">Log In</button>
+        </form>
+      </div>
+    </body>
+    </html>
+    `;
+    
+    res.send(html);
+    
   } 
   catch (err) {
     console.error("Error in /submitUser:", err);
@@ -149,11 +162,26 @@ app.post('/loggingin', async (req,res) => {
 const schema = Joi.string().max(20).required();
 const validationResult = schema.validate(email);
 if (validationResult.error != null) {
-   console.log(validationResult.error);
-     var html = `
-      Invalid email/password combination
-      <a href="/login"> try again </a>
-     `;
+  console.log(validationResult.error);
+
+const html = `
+<html>
+<head>
+  <title>Invalid Credentials</title>
+  <link rel="stylesheet" href="/css/error.css">
+</head>
+<body>
+  <div class="error-container">
+    <h1>Invalid Email/Password</h1>
+    <p>The email and password combination you entered is incorrect. Please try again.</p>
+    <a href="/login">Try Again</a>
+  </div>
+</body>
+</html>
+`;
+
+res.send(html);
+
      res.send(html);
    return;
 }
@@ -161,14 +189,27 @@ if (validationResult.error != null) {
 const result = await userCollection.find({email: email}).project({email: 1, hashedPassword: 1, _id: 1}).toArray();
 
 console.log(result);
-if (result.length != 1) {
-      var html = `
-      User not found
-      <a href="/login"> try again </a>
-     `;
-     res.send(html);
+
+if (result.length !== 1) {
+  const html = `
+    <html>
+    <head>
+      <title>User Not Found</title>
+      <link rel="stylesheet" href="/css/error.css">
+    </head>
+    <body>
+      <div class="error-container">
+        <h1>User Not Found</h1>
+        <p>The user you are looking for could not be found.</p>
+        <a href="/login">Try Again</a>
+      </div>
+    </body>
+    </html>
+  `;
+  res.send(html);
   return;
 }
+
 if (await bcrypt.compare(password, result[0].hashedPassword)) {
   console.log("correct password");
   req.session.authenticated = true;
@@ -181,11 +222,24 @@ if (await bcrypt.compare(password, result[0].hashedPassword)) {
   return;
 }
 else {
-      var html = `
-      Invalid password
-      <a href="/login"> try again </a>
-     `;
-     res.send(html);
+  const html = `
+  <html>
+  <head>
+    <title>Invalid Password</title>
+    <link rel="stylesheet" href="/css/error.css">
+  </head>
+  <body>
+    <div class="error-container">
+      <h1>Invalid Password</h1>
+      <p>The password you entered is incorrect. Please try again.</p>
+      <a href="/login">Try Again</a>
+    </div>
+  </body>
+  </html>
+  `;
+  
+  res.send(html);
+  
 }
 });
 app.get('/logout', (req,res) => {
