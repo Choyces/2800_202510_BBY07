@@ -14,8 +14,11 @@
     <!------------------------------------------>
     <!-- Bootstrap Library CSS JS CDN go here -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+   
     <!------------------------------------------>
 
 
@@ -26,7 +29,7 @@
     <!-------------------------------------------->
     <!-- Other libraries and styles of your own -->
     <!-------------------------------------------->
-    <link rel="stylesheet" href="../styles/profile.css">
+    <link rel="stylesheet" href="/css/profile.css">
     
       
 
@@ -43,19 +46,19 @@
     <!-- the body of your page goes here -->
     <div class="row py-5 px-4">
         <div class="col-md-5 mx-auto">
-          <!-- Profile widget -->
+         
           <div class="bg-white shadow rounded overflow-hidden">
             <div class="px-4 pt-0 pb-4 cover">
               <div class="media align-items-end profile-head">
                 <div class="profile mr-3">
                   <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80"
                     alt="..." width="130" class="rounded mb-2 img-thumbnail">
-                  <a href="./editProfile.html" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a>
+                  <a href="/editProfile" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a>
                 </div>
                 <div class="media-body mb-5 text-white">
-                  <h4 class="mt-0 mb-0">Mark Williams</h4>
+                  <h4 id="userName"  class="mt-0 mb-0"></h4>
                   <p class="small mb-4">
-                    <i class="fas fa-map-marker-alt mr-2"></i>New York
+                    <i id="userLocation" class="fas fa-map-marker-alt mr-2"></i>New York
                   </p>
                 </div>
               </div>
@@ -137,7 +140,7 @@
     <!-- <script src="../scripts/firebaseAPI_TEAM99.js"></script>
     <script src="../scripts/skeleton.js"></script>
     <script src="../scripts/authentication.js"></script> -->
-    <script src="../scripts/profile.js"></script> 
+    <script src="/js/profile.js"></script> 
 
 </body>
 </html> 
