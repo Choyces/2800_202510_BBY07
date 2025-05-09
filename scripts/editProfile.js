@@ -1,8 +1,12 @@
 // Load user information from the server when the page loads
 async function loadUserInfo() {
   try {
+    // Temporarily enable fieldset to populate values
+    const fields = document.getElementById("personalInfoFields");
+    const wasDisabled = fields.disabled;
+    fields.disabled = false;
     // Make a request to the backend to get the current user's profile
-    const res = await fetch("/api/users/profile", {
+    const res = await fetch("/profile/data", {
       headers: {
         // Pass the authorization token from localStorage
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -16,9 +20,9 @@ async function loadUserInfo() {
     const data = await res.json();
 
     // Populate form fields with user data
-    document.getElementById("nameInput").value = data.name || "";
-    document.getElementById("aboutMeInput").value = data.bio || "";
-    document.getElementById("locationInput").value = data.location || "";
+    document.getElementById("name").value = data.name || "";
+    document.getElementById("bio").value = data.bio || "";
+    document.getElementById("location").value = data.location || "";
     document.getElementById("uploadPhoto").src = data.avatarUrl || "";
 
     // Set the age dropdown value if age is available
@@ -31,6 +35,9 @@ async function loadUserInfo() {
       );
       if (genderInput) genderInput.checked = true;
     }
+    // Restore disabled state if it was originally disabled
+    if (wasDisabled) fields.disabled = true;
+
   } catch (err) {
     // Log any errors to the console
     console.error("Error loading user info:", err);
@@ -77,9 +84,9 @@ function editUserInfo() {
 async function saveUserInfo() {
   // Collect form data
   const userData = {
-    name: document.getElementById("nameInput").value,
-    about: document.getElementById("aboutMeInput").value,
-    location: document.getElementById("locationInput").value,
+    name: document.getElementById("name").value,
+    about: document.getElementById("bio").value,
+    location: document.getElementById("location").value,
     age: document.getElementById("ageInput").value,
     gender: document.querySelector('input[name="gender"]:checked')?.value,
     profileImage: document.getElementById("uploadPhoto").src,
@@ -90,8 +97,8 @@ async function saveUserInfo() {
 
   try {
     // Send PUT request to update profile
-    const response = await fetch("/api/users/profile", {
-      method: "PUT",
+    const response = await fetch("/profile/update", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,

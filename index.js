@@ -34,7 +34,9 @@ var mongoStore = MongoStore.create({
 // REQUIRES
 const app = express();
 app.use(express.urlencoded({extended: false}));
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(session({
  secret: 'hi guys this is a secret key',
  resave: true,
@@ -48,6 +50,7 @@ app.use("/css", express.static("./styles"));
 app.use("/img", express.static("./image"));
 app.use('/text', express.static(path.join(__dirname, '..', 'text'))); 
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+app.use('/', require('./routes/profileRoutes'));
 
 const routesPath = path.join(__dirname, 'routes'); 
 fs.readdirSync(routesPath)
@@ -230,8 +233,14 @@ app.use(function (req, res, next) {
     // correct, otherewise, you'd get a 404 on the 404 (actually a 500 on the 404)
     res.status(404).send("<html><head><title>Page not found!</title></head><body><p>Nothing here.</p></body></html>");
 });
+
 // RUN SERVER
 let port = 8000;
 app.listen(port, function () {
     console.log("Example app listening on port " + port + "!");
+});
+
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  next();
 });
