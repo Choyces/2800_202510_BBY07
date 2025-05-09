@@ -21,16 +21,7 @@
     </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-    <!-------------------------------------------------------->
-    <!-- Firebase 8 Library related CSS, JS, JQuery go here -->
-    <!-------------------------------------------------------->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script> 
-    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <!-------------------------------------------->
     <!-- Other libraries and styles of your own -->
@@ -40,36 +31,20 @@
 </head>
 
 <body>
-    <!------------------------------>
-    <!-- Your HTML Layout go here -->
-    <!------------------------------>
-
     
-    <nav id="navbarPlaceholder"></nav>
+  <nav id="navbarPlaceholder"></nav>
+    
+  <body>
+    <h1>Notifications</h1>
+    <ul id="notif-list"></ul>
+    <script src="../scripts/notifications.js"></script>
+  </body>
   
-    
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Notifications</h1>
-        <button id="markAllReadBtn" class="btn btn-secondary">
-          Mark All as Read
-        </button>
-      </div>
-      <div id="postsContainer"></div>
-    </div>
+  <nav id="footerPlaceholder"></nav>
 
-    
-
-    
-    <nav id="footerPlaceholder"></nav>
-
-    <!---------------------------------------------->
-    <!-- Your own JavaScript functions go here    -->
-    <!---------------------------------------------->
-    <script src="../scripts/firebaseAPI_TEAM99.js"></script>
-    <script src="../scripts/skeleton.js"></script>
-    <script src="../scripts/script.js"></script>
-    <script src="../scripts/notification.js"></script>
+  <!-- <script src="../scripts/skeleton.js"></script>
+  <script src="../scripts/script.js"></script> -->
+  <script src="../scripts/notification.js"></script>
 
 </body>
 

@@ -41,6 +41,10 @@ app.use(session({
  saveUninitialized: true
 }));
 
+// serve *everything* in your project root at the web root
+app.use(express.static(__dirname));
+
+
 // just like a simple web server like Apache web server
 // we are mapping file system paths to the app's virtual paths
 app.use("/js", express.static("./scripts"));
@@ -61,10 +65,6 @@ app.get("/", function(req, res) {
     let doc = fs.readFileSync("./index.html", "utf8");
     res.send(doc);
 });
-<<<<<<< HEAD
-=======
-
->>>>>>> 5c0f450 (added route and express.js)
 app.get("/signup", function(req, res) {
   let doc = fs.readFileSync("./text/signup.html", "utf8");
   res.send(doc);
@@ -73,13 +73,10 @@ app.get("/main", function (req, res) {
     let doc = fs.readFileSync("./text/main.html", "utf8");
     res.send(doc);
 });
-<<<<<<< HEAD
-=======
 app.get("/test", function (req, res) {
   let doc = fs.readFileSync("./test.html", "utf8");
   res.send(doc);
 });
->>>>>>> 5c0f450 (added route and express.js)
 
 app.get("/login", function (req, res) {
     let doc = fs.readFileSync("./text/login.html", "utf8");
@@ -249,12 +246,9 @@ app.use(function (req, res, next) {
     res.status(404).send("<html><head><title>Page not found!</title></head><body><p>Nothing here.</p></body></html>");
 });
 
-<<<<<<< HEAD
-=======
 
 
 
->>>>>>> 5c0f450 (added route and express.js)
 // RUN SERVER
 let port = 8000;
 app.listen(port, function () {
