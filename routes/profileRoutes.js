@@ -30,7 +30,15 @@ router.get('/profile/data', async (req, res) => {
     try {
       const user = await userCollection.findOne(
         { _id: new ObjectId(req.session.userId) },
-        { projection: { hashedPassword: 0 } } 
+        {
+          projection: {
+            name: 1,
+            email: 1,
+            location: 1,
+            bio: 1,
+            avatarUrl: 1
+          }
+        }
       );
   
       if (!user) {
@@ -44,30 +52,49 @@ router.get('/profile/data', async (req, res) => {
     }
   });
   
-  // Handle profile update
   router.post('/profile/update', async (req, res) => {
     try {
-      // Check authentication
       if (!req.session.authenticated) {
         console.log("User not authenticated");
         return res.status(401).send("Please log in first");
       }
   
-      console.log("Session userId:", req.session.userId);
-      console.log("Request body:", req.body);
+      const { name, location, about, profileImage } = req.body;
   
-      // Extract form fields
-      const { name, location, about } = req.body;
-  
-      // Validate input
+      // Validate required fields
       if (!name || !location || !about) {
         return res.status(400).send("Missing profile fields");
       }
   
-      // Attempt MongoDB update
+      let avatarUrl = null;
+  
+      // save Base64 image
+      if (profileImage && profileImage.startsWith('data:image/')) {
+        const base64Data = profileImage.replace(/^data:image\/\w+;base64,/, '');
+        const buffer = Buffer.from(base64Data, 'base64');
+        const fileName = `avatar_${Date.now()}.png`;
+        const filePath = path.join(__dirname, '..', 'public', 'uploads', fileName);
+  
+        fs.writeFileSync(filePath, buffer);
+        avatarUrl = `/uploads/${fileName}`; 
+  
+        console.log("Saved image to", filePath);
+      }
+  
+      // create the fields to be updated
+      const updateFields = {
+        name,
+        location,
+        bio: about,
+      };
+  
+      if (avatarUrl) {
+        updateFields.avatarUrl = avatarUrl;
+      }
+  
       const result = await userCollection.updateOne(
         { _id: new ObjectId(req.session.userId) },
-        { $set: { name, location, bio: about } }
+        { $set: updateFields }
       );
   
       console.log("Mongo update result:", result);
@@ -78,7 +105,5 @@ router.get('/profile/data', async (req, res) => {
       res.status(500).send("Server error");
     }
   });
-  
-  
   
 module.exports = router;
