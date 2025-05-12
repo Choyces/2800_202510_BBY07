@@ -63,27 +63,29 @@ app.get("/", function(req, res) {
 });
 app.get("/signup", function(req, res) {
   let doc = fs.readFileSync("./text/signup.html", "utf8");
+        var error = req.query.error;
+      if (error == "email_in_use") {
+        doc = doc.replace("<!--ERROR-->", `<p style="color:red;">Error: Email already in use, please try with another email.</p>`);
+    } 
   res.send(doc);
 });
-app.get("/main", function (req, res) {
+app.get("/main", function (req, res) {  
     let doc = fs.readFileSync("./text/main.html", "utf8");
     res.send(doc);
 });
-
 app.get("/weather", function(req, res) {
   let doc = fs.readFileSync("./text/weather.html", "utf8");
   res.send(doc);
 });
-
 app.get("/test", function (req, res) {
   let doc = fs.readFileSync("./test.html", "utf8");
   res.send(doc);
 });
-
 app.get("/login", function (req, res) {
     let doc = fs.readFileSync("./text/login.html", "utf8");
     res.send(doc);
 });
+
 //signup route
 app.post('/submitUser', async (req,res) => {
   console.log("creating user");
@@ -105,60 +107,63 @@ app.post('/submitUser', async (req,res) => {
       dob:         Joi.date().iso().optional(),
       location:    Joi.string().max(100).optional()
     });
-  
+
     const validationResult = schema.validate({ name, username, email, password, dob, location });
+    const result = await userCollection.find({email: email}).project({email: 1}).toArray();
+
     if (validationResult.error != null) {
       console.log(validationResult.error);
-      
       res.redirect("/signup");
       return;
-    }
-    var hashedPassword = await bcrypt.hash(password, saltRounds);
-    const newUser = {
-      name,
-      username,
-      email,
-      hashedPassword,                
-      dob:      dob ? new Date(dob) : undefined,
-      location: location || '',
-      bio:       '',
-      avatarUrl: '',
-      privacySettings: {
-        notificationsEnabled: true,
-        profilePublic:        true
-      },
-      posts: [],
-      reels: [],
-      followers:   [],
-      following:   [],
-      savedTerms:  [],
-      savedPosts:  []
-    };
-    await userCollection.insertOne(newUser);
-    console.log("Inserted user");
 
-    const html = `
-    <html>
-    <head>
-      <title>User Created</title>
-      <link rel="stylesheet" href="/css/success.css">
-    </head>
-    <body>
-      <div class="success-container">
-        <h1>Account Created Successfully!</h1>
-        <p>Your account has been created. <br> You can now log in.</p>
-        <form action="/login">
-          <button type="submit">Log In</button>
-        </form>
-      </div>
-    </body>
-    </html>
-    `;
-    
-    res.send(html);
-    
-  } 
-  catch (err) {
+      //if email is NOT already in registered, sign up
+    } else if (result.length == 0) {
+      var hashedPassword = await bcrypt.hash(password, saltRounds);
+      const newUser = {
+        name,
+        username,
+        email,
+        hashedPassword,                
+        dob:      dob ? new Date(dob) : undefined,
+        location: location || '',
+        bio:       '',
+        avatarUrl: '',
+        privacySettings: {
+          notificationsEnabled: true,
+          profilePublic:        true
+        },
+        posts: [],
+        reels: [],
+        followers:   [],
+        following:   [],
+        savedTerms:  [],
+        savedPosts:  []
+      };
+      await userCollection.insertOne(newUser);
+      console.log("Inserted user");
+
+      const html = `
+      <html>
+      <head>
+        <title>User Created</title>
+        <link rel="stylesheet" href="/css/success.css">
+      </head>
+      <body>
+        <div class="success-container">
+          <h1>Account Created Successfully!</h1>
+          <p>Your account has been created. <br> You can now log in.</p>
+          <form action="/login">
+            <button type="submit">Log In</button>
+          </form>
+        </div>
+      </body>
+      </html>
+      `;
+      res.send(html);
+    } else {
+      res.redirect("/signup?error=email_in_use");
+    }
+}  catch (err) {
     console.error("Error in /submitUser:", err);
     return res.status(500).send("Oops—something went wrong.");
   }
@@ -173,25 +178,21 @@ const schema = Joi.string().max(20).required();
 const validationResult = schema.validate(email);
 if (validationResult.error != null) {
   console.log(validationResult.error);
-
-const html = `
-<html>
-<head>
-  <title>Invalid Credentials</title>
-  <link rel="stylesheet" href="/css/error.css">
-</head>
-<body>
-  <div class="error-container">
-    <h1>Invalid Email/Password</h1>
-    <p>The email and password combination you entered is incorrect. Please try again.</p>
-    <a href="/login">Try Again</a>
-  </div>
-</body>
-</html>
-`;
-
-res.send(html);
-
+  const html = `
+  <html>
+  <head>
+    <title>Invalid Credentials</title>
+    <link rel="stylesheet" href="/css/error.css">
+  </head>
+  <body>
+    <div class="error-container">
+      <h1>Invalid Email/Password</h1>
+      <p>The email and password combination you entered is incorrect. Please try again.</p>
+      <a href="/login">Try Again</a>
+    </div>
+  </body>
+  </html>
+  `;
      res.send(html);
    return;
 }
