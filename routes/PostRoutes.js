@@ -63,5 +63,35 @@ router.post('/makepost', upload.single('photo'),
   }
 );
 
+//get post datat and stuff
+router.get('/post/data', async (req, res) => {
+    if (!req.session.authenticated) {
+      return res.status(401).json({ error: 'Please log in first' });
+    }
+  
+    try {
+    const postsArray = await posts.find().project({author: 1, title: 1, text: 1, photoUrl: 1, comments: 1, createdAt: 1}).toArray();
 
+    // this is gptd code xd
+    const authorIds = [...new Set(postsArray.map(post => post.author))];
+    const authors = await users.find({ _id: { $in: authorIds } })
+      .project({ username: 1 })
+      .toArray();
+    const authorMap = {};
+    authors.forEach(user => {
+      authorMap[user._id.toString()] = user.username;
+    });
+    const postData = postsArray.map(post => ({
+      ...post,
+      authorUsername: authorMap[post.author.toString()] || "Unknown"
+    }));
+
+    res.json(postData);
+        }
+        catch (err) {
+      console.error("error idk:", err);
+      res.status(500).json({ error: 'Server error' });
+      }
+    });
+  
 module.exports = router;

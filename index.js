@@ -146,48 +146,49 @@ app.post('/loggingin', async (req,res) => {
   var email = req.body.email;
   var password = req.body.password;
 
-const schema = Joi.string().max(20).required();
-const validationResult = schema.validate(email);
-if (validationResult.error != null) {
-   console.log(validationResult.error);
-     var html = `
-      Invalid email/password combination
-      <a href="/login"> try again </a>
-     `;
-     res.send(html);
-   return;
-}
-
-const result = await userCollection.find({email: email}).project({email: 1, hashedPassword: 1, _id: 1}).toArray();
-
-console.log(result);
-if (result.length != 1) {
+  const schema = Joi.string().max(20).required();
+  const validationResult = schema.validate(email);
+  if (validationResult.error != null) {
+    console.log(validationResult.error);
       var html = `
-      User not found
-      <a href="/login"> try again </a>
-     `;
-     res.send(html);
-  return;
-}
-if (await bcrypt.compare(password, result[0].hashedPassword)) {
-  console.log("correct password");
-  req.session.authenticated = true;
-  req.session.email = email;
-  req.session.cookie.maxAge = expireTime;
-  req.session.userId        = result[0]._id.toString();
-  req.session.cookie.maxAge = expireTime;
+        Invalid email/password combination
+        <a href="/login"> try again </a>
+      `;
+      res.send(html);
+    return;
+  }
 
-  res.redirect('/main');
-  return;
-}
-else {
-      var html = `
-      Invalid password
-      <a href="/login"> try again </a>
-     `;
-     res.send(html);
-}
+  const result = await userCollection.find({email: email}).project({email: 1, hashedPassword: 1, _id: 1}).toArray();
+
+  console.log(result);
+  if (result.length != 1) {
+        var html = `
+        User not found
+        <a href="/login"> try again </a>
+      `;
+      res.send(html);
+    return;
+  }
+  if (await bcrypt.compare(password, result[0].hashedPassword)) {
+    console.log("correct password");
+    req.session.authenticated = true;
+    req.session.email = email;
+    req.session.cookie.maxAge = expireTime;
+    req.session.userId        = result[0]._id.toString();
+    req.session.cookie.maxAge = expireTime;
+
+    res.redirect('/main');
+    return;
+  }
+  else {
+        var html = `
+        Invalid password
+        <a href="/login"> try again </a>
+      `;
+      res.send(html);
+  }
 });
+
 app.get('/logout', (req,res) => {
 	req.session.destroy();
     var html = `
@@ -205,7 +206,6 @@ app.get("/profile", function (req, res) {
 app.get("/about", function (req, res) {
 
     let doc = fs.readFileSync("./about.html", "utf8");
-
     // just send the text stream
     res.send(doc);
 
@@ -214,7 +214,6 @@ app.get("/about", function (req, res) {
 app.get("/lists", function (req, res) {
 
     let doc = fs.readFileSync("./app/data/lists.js", "utf8");
-
     // just send the text stream
     res.send(doc);
 
