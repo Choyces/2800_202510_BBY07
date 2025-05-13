@@ -1,3 +1,4 @@
+//load on-line dictionary
 async function lookupWord() {
     const word = document.getElementById("wordInput").value.trim();
     const definitionBox = document.getElementById("definition");
@@ -32,7 +33,7 @@ async function lookupWord() {
       definitionBox.classList.remove("d-none");
     }
   }
-
+//load profile data
 window.onload = async () => {
   const res = await fetch('/profile/data');
   const user = await res.json();

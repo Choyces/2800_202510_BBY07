@@ -15,6 +15,18 @@ router.get('/editProfile', (req, res) => {
     res.send(doc);
 });
 
+//GET /followers
+router.get('/followers', (req, res) => {
+  const doc = fs.readFileSync(path.join(__dirname, '..', 'text', 'followers.html'), 'utf8');
+  res.send(doc);
+});
+
+//GET /following
+router.get('/following', (req, res) => {
+  const doc = fs.readFileSync(path.join(__dirname, '..', 'text', 'following.html'), 'utf8');
+  res.send(doc);
+});
+
 
 const { db } = require('../databaseconnection');
 const { ObjectId } = require('mongodb');
