@@ -1,20 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Basic Chat</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Good hunt for slang</title>
+    <link rel="stylesheet" href="/css/test.css">
 </head>
 <body>
+    <div class="header">
+        <h1>AI tool just type your word</h1>
+    </div>
+    
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="fname" class="search-box" placeholder="Got a slang in mind? Type it!">
+            <button id="click" class="search-button">Let's Hunt!</button>
+        </div>
+        
+        <div class="popular-section">
+            <h2 class="popular-title">
+                <span class="flame-icon">🔥</span> 
+                Some Popular Posts 
+                <span class="flame-icon">🔥</span>
+            </h2>
+        </div>
+        
+        <div class="results-section">
+            <div id="result-content">
+                <div class="word-title">
+                    <span id="word-display">What's that slang?</span>
+                </div>
+                <div id="messages">
+                    <p class="placeholder-text">Hunt for a slang term to see its definition here...</p>
+                </div>
+            </div>
+            <div class="loading" id="loading">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <button class="make-post">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            Make a Post
+        </button>
+    </div>
 
-  <form id="chat-form">
-    <label for="fname">Enter your word</label>
-    <input type="text" id="fname" name="fname"><br><br>
-    <button type="submit" id="click">Submit</button>
-  </form>
-
-  <div id="messages"></div>
-
+    <script src="/js/express.js"></script>
 </body>
-<script src="/js/express.js" type="module"></script>
 </html>
