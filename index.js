@@ -88,6 +88,10 @@ app.get("/login", function (req, res) {
     let doc = fs.readFileSync("./text/login.html", "utf8");
     res.send(doc);
 });
+app.get("/test", function (req, res) {
+  let doc = fs.readFileSync("./text/test.html", "utf8");
+  res.send(doc);
+});
 
 //signup route
 app.post('/submitUser', async (req,res) => {
