@@ -1,0 +1,40 @@
+/* styles/navbar.css */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #333;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.nav-icon {
+    padding: 0 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.nav-icon svg {
+    width: 28px;
+    height: 28px;
+    stroke: gray;
+    transition: stroke 0.3s ease;
+}
+
+.nav-icon:hover svg {
+    stroke: black;
+}
+
+.nav-icon:first-child {
+    margin-left: 10px;
+}
+
+.nav-icon:last-child {
+    margin-right: 10px;
+}

@@ -48,7 +48,7 @@ app.use(session({
 app.use("/js", express.static("./scripts"));
 app.use("/css", express.static("./styles"));
 app.use("/img", express.static("./image"));
-app.use('/text', express.static(path.join(__dirname, '..', 'text'))); 
+app.use('/text', express.static(path.join(__dirname, 'text'))); 
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 app.use('/', require('./routes/profileRoutes'));
 
@@ -88,10 +88,23 @@ app.get("/login", function (req, res) {
     let doc = fs.readFileSync("./text/login.html", "utf8");
     res.send(doc);
 });
-app.get("/test", function (req, res) {
-  let doc = fs.readFileSync("./text/test.html", "utf8");
+app.get("/search", function (req, res) {
+  let doc = fs.readFileSync("./text/search.html", "utf8");
   res.send(doc);
 });
+app.get("/notification", function (req, res) {
+  let doc = fs.readFileSync("./text/notification.html", "utf8");
+  res.send(doc);
+});
+app.get("/messages", function (req, res) {
+  let doc = fs.readFileSync("./text/messages.html", "utf8");
+  res.send(doc);
+});
+app.get("/reel", function (req, res) {
+  let doc = fs.readFileSync("./text/reel.html", "utf8");
+  res.send(doc);
+});
+
 
 //signup route
 app.post('/submitUser', async (req,res) => {
