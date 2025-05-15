@@ -33,6 +33,7 @@ var mongoStore = MongoStore.create({
 
 // REQUIRES
 const app = express();
+app.use(express.json()); 
 app.use(express.urlencoded({extended: false}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
@@ -46,7 +47,7 @@ app.use(session({
 app.use("/js", express.static("./scripts"));
 app.use("/css", express.static("./styles"));
 app.use("/img", express.static("./image"));
-app.use('/text', express.static(path.join(__dirname, '..', 'text'))); 
+app.use('/text', express.static(path.join(__dirname, 'text'))); 
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 const routesPath = path.join(__dirname, 'routes'); 
@@ -265,6 +266,14 @@ app.get("/profile", function (req, res) {
     let doc = fs.readFileSync("./text/profile.html", "utf8");
     res.send(doc);
 
+});
+
+app.get('/messages', (req, res) => {
+  res.sendFile(path.join(__dirname, 'text', 'messages.html'));
+});
+
+app.get('/inside_messages', (req, res) => {
+  res.sendFile(path.join(__dirname, 'text', 'inside_messages.html'));
 });
 
 app.get("/about", function (req, res) {
