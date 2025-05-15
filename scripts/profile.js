@@ -33,67 +33,6 @@ async function lookupWord() {
       definitionBox.classList.remove("d-none");
     }
   }
-//load profile data
-// window.onload = async () => {
-//   const res = await fetch('/profile/data');
-//   const user = await res.json();
-//   if (user.error) return alert(user.error);
-
-//   document.getElementById('name').textContent = user.name || '';
-//   // document.getElementById('email').textContent = user.email || '';
-//   document.getElementById('location').textContent = user.location || '';
-//   document.getElementById('bio').textContent = user.bio || '';
-//   const avatar = document.getElementById('profileAvatar');
-//   avatar.src = user.avatarUrl || '/img/default-avatar.png';
-// };
-
-// window.onload = async () => {
-//   const res = await fetch('/profile/data');
-//   const data = await res.json();
-//   if (data.error) return alert(data.error);
-
-//   document.getElementById('name').textContent = user.name || '';
-//   // document.getElementById('email').textContent = user.email || '';
-//   document.getElementById('location').textContent = user.location || '';
-//   document.getElementById('bio').textContent = user.bio || '';
-//   const avatar = document.getElementById('profileAvatar');
-//   avatar.src = user.avatarUrl || '/img/default-avatar.png';
-
-//   //post rendering
-//   const posts = data.posts;
-//   const postCollection = document.getElementById('postContainer');
-
-//   if (!posts || posts.length === 0) {
-//     postContainer.innerHTML = '<p class = "test-muted"> No post yet.</p>';
-//     return;
-//   }
-
-//   posts.forEach((post, index) => {
-//     const colDiv = document.createElement('div');
-//     colDiv.className = `col-lg-6 mb-2 ${index % 2 === 0 ? 'pr-lg-1' : 'pl-lg-1'}`;
-
-//     if (post.photoUrl) {
-//       colDiv.innerHTML = `
-//         <img src="${post.photoUrl}" alt="${post.title}" class="img-fluid rounded shadow-sm">
-//       `;
-//     } else {
-//       colDiv.innerHTML = `
-//         <div class="img-fluid rounded shadow-sm bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-//           <p class="text-muted p-2 text-center m-0">
-//             ${post.title}<br>
-//             <small>${post.text}</small>
-//           </p>
-//         </div>
-//       `;
-//     }
-
-//     postContainer.appendChild(colDiv);
-//   });
-// } catch (err) {
-//   console.error('Error loading profile:', err);
-//   alert('Failed to load profile data');
-//  }
-// };
 
 window.onload = async () => {
   try {
