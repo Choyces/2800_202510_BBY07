@@ -61,3 +61,29 @@ body {
     border-radius: 5px;
     padding: 10px;
 }
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-title {
+    font-size: 1.2rem;
+  }
+  
+  .card-text {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  
+  .card-img-top {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  
