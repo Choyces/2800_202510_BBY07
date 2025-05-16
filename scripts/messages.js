@@ -125,7 +125,6 @@ function initNewConv() {
     const users = await res.json();
 
     // cache them
-    usersCache.clear();
     users.forEach(u => usersCache.set(u._id, u));
 
     // display results of user search
@@ -191,7 +190,8 @@ function initDeleteMode() {
   const confirm = document.createElement('button');
   confirm.id = 'confirmDeleteBtn';
   confirm.textContent = 'Delete';
-  confirm.className = 'btn btn-danger position-fixed bottom-0 end-0 m-3';
+  confirm.className = 'btn btn-danger position-fixed end-0 m-3';
+  confirm.style.bottom = '58px';
   confirm.style.display = 'none';
   document.body.appendChild(confirm);
 
