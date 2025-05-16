@@ -28,8 +28,8 @@ async function getBotResponse(userMessage, event) {
   event.preventDefault()
 
   
-  const API_KEY = "APi key";
-  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${"APi key"}`;
+  const API_KEY = "AIzaSyAUZyyox_2VLvFK9cjqcl4Fy7Tjq3byfik";
+  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${"AIzaSyAUZyyox_2VLvFK9cjqcl4Fy7Tjq3byfik"}`;
   try {
     const response = await fetch(API_URL, {
       method: "POST",

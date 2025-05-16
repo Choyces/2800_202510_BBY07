@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Good hunt for slang</title>
+    <link rel="stylesheet" href="/css/test.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+
+</head>
+<body>
+  <nav id="navbarPlaceholder"></nav>
+    <div class="header">
+        <h1>AI tool just type your word</h1>
+    </div>
+    
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="fname" class="search-box" placeholder="Got a slang in mind? Type it!">
+            <button id="click" class="search-button">Let's Hunt!</button>
+        </div>
+        
+        <div class="popular-section">
+            <h2 class="popular-title">
+                <span class="flame-icon">🔥</span> 
+                Some Popular Posts 
+                <span class="flame-icon">🔥</span>
+            </h2>
+        </div>
+        
+        <div class="results-section">
+            <div id="result-content">
+                <div class="word-title">
+                    <span id="word-display">What's that slang?</span>
+                </div>
+                <div id="messages">
+                    <p class="placeholder-text">Hunt for a slang term to see its definition here...</p>
+                </div>
+            </div>
+            <div class="loading" id="loading">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+    <nav id="footerPlaceholder"></nav>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/express.js"></script>
+    <script src="/js/skeleton.js"></script>
+
+</body>
+</html>

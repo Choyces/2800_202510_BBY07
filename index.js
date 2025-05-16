@@ -35,7 +35,9 @@ var mongoStore = MongoStore.create({
 const app = express();
 app.use(express.json()); 
 app.use(express.urlencoded({extended: false}));
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(session({
  secret: 'hi guys this is a secret key',
  resave: true,
@@ -49,6 +51,7 @@ app.use("/css", express.static("./styles"));
 app.use("/img", express.static("./image"));
 app.use('/text', express.static(path.join(__dirname, 'text'))); 
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+app.use('/', require('./routes/profileRoutes'));
 
 const routesPath = path.join(__dirname, 'routes'); 
 fs.readdirSync(routesPath)
@@ -86,6 +89,23 @@ app.get("/login", function (req, res) {
     let doc = fs.readFileSync("./text/login.html", "utf8");
     res.send(doc);
 });
+app.get("/search", function (req, res) {
+  let doc = fs.readFileSync("./text/search.html", "utf8");
+  res.send(doc);
+});
+app.get("/notification", function (req, res) {
+  let doc = fs.readFileSync("./text/notification.html", "utf8");
+  res.send(doc);
+});
+app.get("/messages", function (req, res) {
+  let doc = fs.readFileSync("./text/messages.html", "utf8");
+  res.send(doc);
+});
+app.get("/reel", function (req, res) {
+  let doc = fs.readFileSync("./text/reel.html", "utf8");
+  res.send(doc);
+});
+
 
 //signup route
 app.post('/submitUser', async (req,res) => {
@@ -319,4 +339,9 @@ app.use(function (req, res, next) {
 let port = 8000;
 app.listen(port, function () {
     console.log("Example app listening on port " + port + "!");
+});
+
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  next();
 });

@@ -1,0 +1,65 @@
+/* styles/navbar.css */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #d6f7d9; /* Match the green background */
+    padding: 12px 20px;
+    border-bottom: 2px solid #b8e2bb; /* Match footer border */
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    font-family: 'Arial', sans-serif;
+}
+
+.nav-icon {
+    padding: 0 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
+    position: relative;
+}
+
+.nav-icon svg {
+    width: 28px;
+    height: 28px;
+    stroke: #ec35f7; /* Match the pink text */
+    transition: stroke 0.3s ease, transform 0.2s ease;
+}
+
+.nav-icon.active svg {
+    stroke: #b8e2bb; /* Slightly lighter for active state */
+}
+
+.nav-icon:hover svg {
+    stroke: #b8e2bb; /* Slightly lighter for hover effect */
+    transform: scale(1.1);
+}
+
+.nav-icon:hover {
+    color: #b8e2bb;
+    transform: scale(1.1);
+}
+
+.nav-icon:first-child {
+    margin-left: 10px;
+}
+
+.nav-icon:last-child {
+    margin-right: 10px;
+}
+
+.notification-badge {
+    background-color: #ec35f7; /* Match the pink text */
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 2px 6px;
+    position: absolute;
+    top: -5px;
+    right: 5px;
+    transform: scale(0.8);
+}
