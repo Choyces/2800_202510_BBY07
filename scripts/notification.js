@@ -1,23 +1,39 @@
-async function loadNotifications() {
-  try {
-    const res = await fetch('/notifications/data');
-    if (!res.ok) throw new Error('Fetch failed');
-    const notifications = await res.json();
+document.addEventListener('DOMContentLoaded', () => {
+  const listEl     = document.getElementById('notif-list');
+  const markAllBtn = document.getElementById('markAllReadBtn');
 
-    const ul = document.getElementById('notif-list');
-    ul.innerHTML = '';  
-
-    notifications.forEach(n => {
-      const li = document.createElement('li');
-      // Could need to change this becuase of different fields
-      li.textContent = `${n.actorName || n.actor}: ${n.type} on ${new Date(n.createdAt).toLocaleString()}`;
-      ul.appendChild(li);
-    });
-  } catch (err) {
-    console.error(err);
+  async function loadNotifications() {
+    const res    = await fetch('/notifications/data');
+    const items  = await res.json();
+    listEl.innerHTML = items.map(n => `
+      <div class="notif-item ${n.read ? 'read' : 'unread'}"
+           data-id="${n._id}"
+           data-post="${n.postId || ''}">
+        ${n.message}
+      </div>
+    `).join('');
+    attachListeners();
   }
-}
 
-window.addEventListener('DOMContentLoaded', loadNotifications);
+  function attachListeners() {
+    document.querySelectorAll('.notif-item').forEach(el => {
+      el.addEventListener('click', async () => {
+        const id     = el.dataset.id;
+        const postId = el.dataset.post;
+        // mark this one as read
+        await fetch(`/notifications/${id}/read`, { method: 'POST' });
+        el.classList.replace('unread','read');
+        // navigate to the post 
+        // window.location.href /posts/${postId}; 
+      });
+    });
+  }
 
-setInterval(loadNotifications, 30_000);
+  markAllBtn.addEventListener('click', async () => {
+    await fetch('/notifications/readAll', { method: 'POST' });
+    document.querySelectorAll('.notif-item.unread')
+            .forEach(el => el.classList.replace('unread','read'));
+  });
+
+  loadNotifications();
+});

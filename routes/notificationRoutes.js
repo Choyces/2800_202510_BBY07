@@ -63,4 +63,22 @@ router.post('/notifications/:id/read', async (req, res, next) => {
   }
 });
 
+router.post('/notifications/readAll', async (req, res, next) => {
+  try {
+    if (!req.session.userId) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+    const userId = new ObjectId(req.session.userId);
+    await notifications.updateMany(
+      { recipient: userId, read: false },
+      { $set: { read: true } }
+    );
+    res.json({ success: true });
+  }
+  catch (err) {
+    next(err);
+  }
+});
+
+
 module.exports = router;
