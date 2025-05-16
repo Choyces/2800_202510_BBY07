@@ -93,6 +93,35 @@ h2.text-center {
     color: white;
     transform: scale(1.05);
 }
+/* Button styles */
+.post-filter {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    border-radius: 25px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #ff69b4, #8a2be2);
+    color: white;
+    font-weight: bold;
+    border: none;
+    margin: 0 10px;
+    transition: transform 0.2s ease, background 0.3s ease;
+    cursor: pointer;
+}
+
+.filter-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #ff85c1, #9d5cf1);
+}
+
+.filter-btn:focus {
+    outline: none;
+    background: linear-gradient(135deg, #ff85c1, #9d5cf1);
+}
+
 
 @media (max-width: 768px) {
     .card-title {
