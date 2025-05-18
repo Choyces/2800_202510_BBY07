@@ -96,11 +96,11 @@ router.get('/post/data', async (req, res) => {
 });
 
 // global catch for users' posts
-app.get('/:username/post/:postID', async (req, res) => {
+router.get('/:username/post/:postID', async (req, res) => {
   const username = req.params.username;
   const postID = req.params.postID;
 
-    const findUser = await userCollection.find({username: username}).project({username: 1}).toArray();
+    const findUser = await users.find({username: username}).project({username: 1}).toArray();
     if (findUser.length > 0){
       const findPost = await posts.find({_id: postID}).project({title: 1}).toArray();
       res.render("insidePost", {username: username, postID: postID});
