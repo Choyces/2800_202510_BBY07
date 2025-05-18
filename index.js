@@ -69,21 +69,22 @@ app.get("/main", function (req, res) {
     let doc = fs.readFileSync("./text/main.html", "utf8");
     res.send(doc);
 });
-
 app.get("/weather", function(req, res) {
   let doc = fs.readFileSync("./text/weather.html", "utf8");
   res.send(doc);
 });
-
 app.get("/test", function (req, res) {
   let doc = fs.readFileSync("./test.html", "utf8");
   res.send(doc);
 });
-
 app.get("/login", function (req, res) {
     let doc = fs.readFileSync("./text/login.html", "utf8");
     res.send(doc);
+});app.get("/reels", function (req, res) {
+  let doc = fs.readFileSync("./text/reel.html", "utf8");
+  res.send(doc);
 });
+
 //signup route
 app.post('/submitUser', async (req,res) => {
   console.log("creating user");
@@ -169,49 +170,6 @@ app.post('/loggingin', async (req,res) => {
   var email = req.body.email;
   var password = req.body.password;
 
-<<<<<<< HEAD
-  const schema = Joi.string().max(20).required();
-  const validationResult = schema.validate(email);
-  if (validationResult.error != null) {
-    console.log(validationResult.error);
-      var html = `
-        Invalid email/password combination
-        <a href="/login"> try again </a>
-      `;
-      res.send(html);
-    return;
-  }
-
-  const result = await userCollection.find({email: email}).project({email: 1, hashedPassword: 1, _id: 1}).toArray();
-
-  console.log(result);
-  if (result.length != 1) {
-        var html = `
-        User not found
-        <a href="/login"> try again </a>
-      `;
-      res.send(html);
-    return;
-  }
-  if (await bcrypt.compare(password, result[0].hashedPassword)) {
-    console.log("correct password");
-    req.session.authenticated = true;
-    req.session.email = email;
-    req.session.cookie.maxAge = expireTime;
-    req.session.userId        = result[0]._id.toString();
-    req.session.cookie.maxAge = expireTime;
-
-    res.redirect('/main');
-    return;
-  }
-  else {
-        var html = `
-        Invalid password
-        <a href="/login"> try again </a>
-      `;
-      res.send(html);
-  }
-=======
 const schema = Joi.string().max(20).required();
 const validationResult = schema.validate(email);
 if (validationResult.error != null) {
@@ -294,7 +252,6 @@ else {
   res.send(html);
   
 }
->>>>>>> a8411e14c247316edc6a8100c5858ba3a9ff4949
 });
 
 app.get('/logout', (req,res) => {

@@ -122,17 +122,19 @@ async function getPosts() {
 }
 
 // Selects random subset of posts from array
-function selectRandomPosts(postsArray, count = 3) {
-  return postsArray.sort(() => 0.5 - Math.random()).slice(0, count);
+function selectRandomPosts(postsArray) {
+  return postsArray.sort(() => 0.5 - Math.random());
 }
 
 // Creates cloned card element from template populated with post data
 function createCardElement(cardTemplate, post) {
   const newCard = cardTemplate.content.cloneNode(true);
+  let creationDate = post.createdAt.toDateString();
+  console.log("createDate", createDate);
   newCard.querySelector('.card-title').innerText = post.title || "No Title";
   newCard.querySelector('.card-text').innerText = post.text || "No Content";
   newCard.querySelector('.card-author').innerText = post.authorUsername || "Unknown Author";
-  newCard.querySelector('.card-date').innerText = post.createdAt || "Unknown Date";
+  newCard.querySelector('.card-date').innerText = creationDate || "Unknown Date";
   return newCard;
 }
 
