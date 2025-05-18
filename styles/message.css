@@ -1,0 +1,106 @@
+:root {
+  --bs-primary: #8a2be2;
+  --bs-primary-rgb: 138, 43, 226; 
+}
+
+.bg-primary,
+.btn-primary {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+.btn-primary {
+  color: #fff !important;
+}
+
+.bubble-sent {
+  display: inline-block;
+  max-width: 75vw;
+  padding: 0.5rem;
+  background: var(--bs-primary);
+  color:#fff;
+  border-radius: 1rem;
+  word-break: break-word;
+}
+
+.bubble-received {
+  display: inline-block;
+  max-width: 75vw;
+  padding: 0.5rem;
+  background:#f8f9fa;
+  color:#212529;
+  border-radius: 1rem;
+  word-break: break-word;
+}
+
+.send-button {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  flex-shrink: 0;
+}
+
+#messageInput {
+  border-radius: 1rem;
+  resize: none;    
+  overflow: hidden;
+}
+
+.conversation-card {
+  border-bottom: 1px solid #dee2e6;
+}
+
+#searchResults div {
+  cursor: pointer;
+  padding: 0.5rem;
+}
+#searchResults div.fw-bold {
+  font-weight: bold;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+}
+
+.icon-btn i {
+  font-size: 1.5rem;
+  color: var(--bs-primary);
+}
+
+.icon-btn:hover i {
+  opacity: 0.8;
+}
+
+.conversation-card {
+  position: relative;
+  padding-left: 1.5rem; 
+}
+
+.unread-dot {
+  position: absolute;
+  left: 0.5rem;              
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--bs-primary);
+  border-radius: 50%;
+  pointer-events: none;      
+}
+
+.unread-dot-inline {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--bs-primary);
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+#messageInput {
+  min-height: 1.5em;  
+}

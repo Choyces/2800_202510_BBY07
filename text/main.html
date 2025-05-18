@@ -30,6 +30,9 @@
     <!-- Other libraries and styles of your own -->
     <!-------------------------------------------->
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+
    
 </head>
 
@@ -44,28 +47,21 @@
     <!-- displays the main content -->
     <div class="container-fluid" style="background-color: #c7c6c2; color: #817c7c;">
         <div class="container py-5">
+            <div class="post-filter">
+                <button class="filter-btn" id="btn-follow">Follow</button>
+                <button class="filter-btn" id="btn-explore">Explore</button>
+                <button class="filter-btn" id="btn-nearby">Nearby</button>
+            </div>
             <h1 class="text-center fw-bold text-wrap"
                 style="color: #080c0c; font-size: clamp(1.5rem, 5vw, 3rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                 Good hunt for slang, <br><span id="name-goes-here" style="color: #2a656f;"></span>
             </h1>
             <hr style="border-top: 3px solid #EEC0C6; width: 50%; margin: 1rem auto;">
-
         </div>
+        
     </div>
 
-    <!-- Search function -->
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <form id="searchForm" class="d-flex">
-                    <input type="search" id="searchInput" class="form-control me-2"
-                        placeholder="Got a slang in mind? Type it!" aria-label="Search">
-                    <button class="btn btn-outline-primary" type="submit">Let's Hunt!</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
+ 
     <!-- Displays the popular posts -->
     <div class="container mt-4">
         <h2 class="mb-4 text-center">🔥 Some Popular Posts 🔥</h2>
@@ -91,10 +87,6 @@
         </div>
     </template>
 
-    <!-- Temporary Button to go to makepost page, Can't see nav yet -->
-    <a href="/makepost" class="btn btn-primary">
-      <i class="bi bi-pencil-square"></i> Make a Post
-    </a>
 
     <!-- our own footer goes here-->
     <nav id="footerPlaceholder"></nav>
@@ -102,9 +94,9 @@
     <!---------------------------------------------->
     <!-- Your own JavaScript functions go here    -->
     <!---------------------------------------------->
-    <script src="../scripts/skeleton.js"></script>
+    <script src="/js/skeleton.js"></script>
     <script src="/js/main.js"></script>
-    <script src="../scripts/script.js"></script>
+    <script src="/js/footer.js"></script>
 
 </body>
 

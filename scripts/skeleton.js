@@ -1,14 +1,19 @@
-// Loads navbar and footer for all pages
 function loadSkeleton() {
+    const isAuthenticated = !!document.cookie.match(/session/);
 
-    firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {                   
-            console.log($('#navbarPlaceholder').load('./nav_after_login.html'));
-            console.log($('#footerPlaceholder').load('./footer.html'));
-        } else {
-            console.log($('#navbarPlaceholder').load('./nav_before_login.html'));
-            console.log($('#footerPlaceholder').load('./footer.html'));
-        }
-    });
+    const navbarFile = isAuthenticated ? '/text/nav_after_login.html' : '/text/nav_before_login.html';
+    const footerFile = '/text/footer.html';
+
+    // Load navbar
+    fetch(navbarFile)
+        .then(response => response.text())
+        .then(data => document.getElementById('navbarPlaceholder').innerHTML = data);
+
+    // Load footer
+    fetch(footerFile)
+        .then(response => response.text())
+        .then(data => document.getElementById('footerPlaceholder').innerHTML = data);
 }
-loadSkeleton(); 
+
+loadSkeleton();
+

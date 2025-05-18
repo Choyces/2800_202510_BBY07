@@ -14,10 +14,53 @@
     </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="/css/message.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
-<body>
+<body class="d-flex flex-column vh-100">
   <nav id="navbarPlaceholder"></nav>
+  <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom flex-shrink-0">
+    <button id="deleteModeBtn" class="icon-btn me-3">
+      <i class="bi bi-dash-circle"></i>
+    </button>
+    <h1 class="h4 m-0 text-center flex-grow-1">Messages</h1>
+    <button id="newConvBtn" class="icon-btn ms-3">
+      <i class="bi bi-plus-circle"></i>
+    </button>
+  </div>
+  <div class="px-3 py-2 flex-shrink-0 border-bottom">
+    <input id="searchConvosInput" type="text" class="form-control" placeholder="Search messages..."/>
+  </div>
+  <div id="conversationsList" class="flex-grow-1 overflow-auto p-0 pb-5"></div>
+
+  <div id="newConvModal" style=" display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1050;  ">
+    <div class="bg-white rounded p-4 mx-auto" style="max-width:500px; margin-top:10vh;">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="m-0">New Message</h5>
+        <button id="closeModal" class="btn btn-sm btn-outline-secondary">&times;</button>
+      </div>
+      <div id="selectedUsers" class="mb-3"></div>
+      <textarea id="initialMessage" class="form-control mb-2" rows="2" placeholder="Type your first message…"></textarea>
+      <input id="convSearch" class="form-control mb-2" placeholder="Search by name or email…"/>
+      <button id="searchBtn" class="btn btn-primary mb-2">Search</button>
+      <div id="searchResults" class="list-group mb-3"></div>
+      <div class="text-end">
+        <button id="sendConvBtn" class="btn btn-success" disabled>Send</button>
+      </div>
+    </div>
+  </div>
+
+
   <nav id="footerPlaceholder"></nav>
+
+  <script src="/js/messages.js"></script>
+  <script src="/js/skeleton.js"></script>
+  <script src="/js/footer.js"></script>
 </body>

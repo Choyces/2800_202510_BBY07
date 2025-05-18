@@ -13,11 +13,31 @@
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
     </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
-    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="/css/message.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
-<body>
+<body class="d-flex flex-column vh-100">
   <nav id="navbarPlaceholder"></nav>
+  <h5 id="conversationTitle" class="text-center py-3 flex-shrink-0">Person's name</h5>
+  <div id="messagesContainer" class="flex-grow-1 overflow-auto px-3 pb-5">
+    <div id="messages" class="d-flex flex-column"></div>
+  </div>
+
+  <div class="position-fixed start-0 end-0 bg-white border-top p-2" style="bottom: 63px;" >
+    <div class="input-group">
+    <textarea id="messageInput" class="form-control rounded-4 me-2" placeholder="Message…"
+      rows="1" style="resize: none; overflow: hidden; height: auto;"></textarea>
+      <button id="sendButton" class="btn btn-primary send-button rounded-3" title="Send">
+        <i class="bi bi-arrow-up"></i>
+      </button>
+    </div>
+  </div>
+
   <nav id="footerPlaceholder"></nav>
+
+  <script src="/js/messages.js"></script>
+  <script src="/js/skeleton.js"></script>
+  <script src="/js/footer.js"></script>
 </body>
