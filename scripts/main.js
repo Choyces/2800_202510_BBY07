@@ -121,20 +121,20 @@ async function getPosts() {
   }
 }
 
-// Selects random subset of posts from array
+// Selects random subset of posts from array ------TO BE CHANGED TO MOST VIEWED WITHIN WEEK AFTER SEARCH IS FIXED
 function selectRandomPosts(postsArray) {
-  return postsArray.sort(() => 0.5 - Math.random());
+  return postsArray.sort(() => 0.5 - Math.random()).slice(0, 3);
 }
 
 // Creates cloned card element from template populated with post data
 function createCardElement(cardTemplate, post) {
   const newCard = cardTemplate.content.cloneNode(true);
-  let creationDate = post.createdAt.toDateString();
-  console.log("createDate", createDate);
   newCard.querySelector('.card-title').innerText = post.title || "No Title";
   newCard.querySelector('.card-text').innerText = post.text || "No Content";
   newCard.querySelector('.card-author').innerText = post.authorUsername || "Unknown Author";
-  newCard.querySelector('.card-date').innerText = creationDate || "Unknown Date";
+  newCard.querySelector('.card-author').setAttribute("href",`${post.authorUsername}`);
+  newCard.querySelector('.card-date').innerText = post.createdAt.slice(0, 10) || "Unknown Date";
+  newCard.querySelector('.read-more-btn').setAttribute("href",`${post.authorUsername}/post/${post._id}`);
   return newCard;
 }
 

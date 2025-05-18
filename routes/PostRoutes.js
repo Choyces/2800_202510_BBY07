@@ -63,11 +63,13 @@ router.post('/makepost', upload.single('photo'),
   }
 );
 
-//get post datat and stuff
+//get post data and stuff
 router.get('/post/data', async (req, res) => {
-    if (!req.session.authenticated) {
-      return res.status(401).json({ error: 'Please log in first' });
-    }
+
+  // Is there a reason to make the website login only to use?
+    // if (!req.session.authenticated) {
+    //   return res.status(401).json({ error: 'Please log in first' });
+    // }
   
     try {
     const postsArray = await posts.find().project({author: 1, title: 1, text: 1, photoUrl: 1, comments: 1, createdAt: 1}).toArray();
@@ -89,7 +91,7 @@ router.get('/post/data', async (req, res) => {
     res.json(postData);
         }
         catch (err) {
-      console.error("error idk:", err);
+      console.error("error with post data:", err);
       res.status(500).json({ error: 'Server error' });
       }
     });
