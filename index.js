@@ -199,7 +199,7 @@ app.post('/submitUser', async (req,res) => {
 
 // Login route
 app.post('/loggingin', async (req,res) => {
-  var email = req.body.email.tolowerCase();
+  var email = req.body.email.toLowerCase();
   var password = req.body.password;
 
   const schema = Joi.string().max(20).required();
