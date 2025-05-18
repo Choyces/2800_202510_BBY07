@@ -36,7 +36,7 @@ router.get('/following', (req, res) => {
 });
 
 // GET /post/:id (Serve post detail page)
-router.get('/post/:id', async (req, res) => {
+router.get('/yourposts/:id', async (req, res) => {
   try {
     const post = await postCollection.findOne({ _id: new ObjectId(req.params.id) });
     if (!post) return res.status(404).send('Post not found');
@@ -120,13 +120,10 @@ router.post('/profile/update', async (req, res) => {
 });
 
 // Route edit post page
-router.get('/post/:id/edit',(req,res) =>{
+router.get('/yourposts/:id/edit',(req,res) =>{
   res.send(readHTML('postEdit.html'));
 })
-// Route post detail page
-router.get('/post/:id', (req, res) => {
-  res.send(readHTML('postDetail.html')); 
-});
+
 // GET /api/post/:id (Fetch single post)
 router.get('/api/post/:id', async (req, res) => {
   try {
