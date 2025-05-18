@@ -43,6 +43,7 @@ router.post('/makepost', upload.single('photo'),
         photoUrl,             
         comments: [],
         stats: {
+          views: 0,
           commentCount: 0,
           likeCount:    0
         },
@@ -65,22 +66,20 @@ router.post('/makepost', upload.single('photo'),
 
 //get post data and stuff
 router.get('/post/data', async (req, res) => {
+  // I see no reason to make the website login only to use - Justin
+  // if (!req.session.authenticated) {
+  //   return res.status(401).json({ error: 'Please log in first' });
+  // }
 
-  // Is there a reason to make the website login only to use?
-    // if (!req.session.authenticated) {
-    //   return res.status(401).json({ error: 'Please log in first' });
-    // }
-  
-    try {
-    const postsArray = await posts.find().project({author: 1, title: 1, text: 1, photoUrl: 1, comments: 1, createdAt: 1}).toArray();
-
+  try {
+  const postsArray = await posts.find().project({author: 1, title: 1, text: 1, photoUrl: 1, comments: 1, createdAt: 1}).toArray();
     // this is gptd code xd
     const authorIds = [...new Set(postsArray.map(post => post.author))];
     const authors = await users.find({ _id: { $in: authorIds } })
       .project({ username: 1 })
       .toArray();
-    const authorMap = {};
-    authors.forEach(user => {
+      const authorMap = {};
+      authors.forEach(user => {
       authorMap[user._id.toString()] = user.username;
     });
     const postData = postsArray.map(post => ({
@@ -89,11 +88,27 @@ router.get('/post/data', async (req, res) => {
     }));
 
     res.json(postData);
-        }
-        catch (err) {
-      console.error("error with post data:", err);
-      res.status(500).json({ error: 'Server error' });
-      }
-    });
+    }
+    catch (err) {
+    console.error("error with post data:", err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// global catch for users' posts
+app.get('/:username/post/:postID', async (req, res) => {
+  const username = req.params.username;
+  const postID = req.params.postID;
+
+    const findUser = await userCollection.find({username: username}).project({username: 1}).toArray();
+    if (findUser.length > 0){
+      const findPost = await posts.find({_id: postID}).project({title: 1}).toArray();
+      res.render("insidePost", {username: username, postID: postID});
+    }  
+    // if no such user exists
+    else { 
+      res.render("404");
+   }
+});
   
 module.exports = router;

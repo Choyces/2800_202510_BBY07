@@ -25,11 +25,10 @@ function fetchLocation() {
           (error) => {
             console.warn("Geolocation error:", error);
           }
-        ); 
+        );
       } else {
         console.error("Geolocation not supported.");
       }
-
 }
 
 function displayLocationData(data) {
