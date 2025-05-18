@@ -120,11 +120,12 @@ app.post('/submitUser', async (req,res) => {
     const {
       name,
       username,
-      email,
+      rawemail = req.body.email.toLowerCase(),
       password,
       dob,        
       location
     } = req.body;
+    email = rawemail.toLowerCase();
   
     const schema = Joi.object({
       name:   Joi.string().max(50).required(),
@@ -198,7 +199,7 @@ app.post('/submitUser', async (req,res) => {
 
 // Login route
 app.post('/loggingin', async (req,res) => {
-  var email = req.body.email;
+  var email = req.body.email.tolowerCase();
   var password = req.body.password;
 
   const schema = Joi.string().max(20).required();
@@ -335,6 +336,8 @@ app.get("/date", function (req, res) {
 app.get('/:username', async (req, res) => {
   const username = req.params.username;
 
+  // if you goto a url that is your username, render your profile -- may change this to 
+  // same as profile.ejs with edit button.
   if (username == req.session.username){
     res.render("userProfile");
   }
