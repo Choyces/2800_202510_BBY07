@@ -109,6 +109,8 @@
 // }
 
 //new mongo post stuff.......... keeping old firebase stuff for reference^^^^^^^^^^^^
+
+//Gets all posts from the database
 async function getPosts() {
   try {
     const res = await fetch("/post/data", {
@@ -120,6 +122,19 @@ async function getPosts() {
     console.error("Error loading post info:", err);
   }
 }
+
+//gets all liked posts from the database
+async function getLiked() {
+  try {
+    const res = await fetch("/post/liked", {
+    });
+    if (!res.ok) throw new Error("Failed to fetch post data");
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error("Error loading post info:", err);
+  }
+};
 
 // Selects random subset of posts from array ------TO BE CHANGED TO MOST VIEWED WITHIN WEEK AFTER SEARCH IS FIXED
 function selectRandomPosts(postsArray) {
@@ -159,6 +174,74 @@ async function displayPosts() {
     }
   } catch (error) {
     console.error("Error displaying posts: ", error);
+  }
+}
+
+//like functions
+
+  //load like button on page load depending on if user has liked the post or not
+async function showLikebutton() {
+  const postID = document.querySelector('#postContainer').getAttribute('data-post-id');
+  const likeButton = document.getElementById("likebutton");
+  const container = document.getElementById("posts-go-here");
+  try {
+    const userLiked = await getLiked();
+    const selectedPosts = selectRandomPosts(postsArray);
+    
+    for (const post of selectedPosts) {
+      const newCard = await processSinglePost(post, cardTemplate);
+      container.appendChild(newCard);
+    }
+  } catch (error) {
+    console.error("Error displaying posts: ", error);
+  }
+}
+
+  //like button function
+async function likePost(){
+  const postID = document.querySelector('#postContainer').getAttribute('data-post-id');
+  try {
+    const res = await fetch(`/like/${postID}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+
+    const result = await res.json()
+    if (result.success){
+      if (document.getElementById('likebutton').innerText == "Liked") {
+        document.getElementById('likebutton').innerText = "Like this post";
+      } else {
+        document.getElementById('likebutton').innerText = "Liked";
+      };
+    }
+  } catch (err) {console.error("Error adding comment info:", err);}
+};
+
+async function addComment() {
+  const commentText = document.getElementById('commentInput').value;
+  const postID = document.querySelector('#postContainer').getAttribute('data-post-id');
+
+  if (commentText.trim().length <= 0) {
+    alert("enter a comment");
+    return;
+  }
+
+  try {
+    const res = await fetch(`/createComment/${postID}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ comment: commentText })
+    });
+
+    const result = await res.text();
+    console.log(result);
+    document.getElementById('commentInput').value = "";
+  } catch (err) {
+    console.error("Error adding comment info:", err);
   }
 }
 
