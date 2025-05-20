@@ -1,35 +1,17 @@
-
-
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
-
-
   const btn = document.getElementById("click");
   btn.addEventListener("click", (event) => {
-    event.preventDefault();  // Prevent default form submission (if you were using a form)
+    event.preventDefault();
     const forumInput = document.getElementById("fname").value;  
     getBotResponse(forumInput, event);  
   });
 });
- 
-
-
-
-
-
-
-
 
 async function getBotResponse(userMessage, event) {
-  event.preventDefault()
-
+  event.preventDefault();
   
-  const API_KEY = "APi key";
-  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${"APi key"}`;
+  const API_KEY = process.env.API_KEY;
+  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.API_KEY}`;
   try {
     const response = await fetch(API_URL, {
       method: "POST",
@@ -37,7 +19,7 @@ async function getBotResponse(userMessage, event) {
       body: JSON.stringify({
         contents: [
           {
-            parts: [{ text: `Provide a small definition for the word like urban dictionary: ${userMessage}` }],  // Asking for definition
+            parts: [{ text: `Provide a small definition for the word like urban dictionary: ${userMessage}` }],
           },
         ],
       }),
@@ -50,11 +32,9 @@ async function getBotResponse(userMessage, event) {
     }
 
     const botMessage = data.candidates[0].content.parts[0].text;
-document.getElementById("messages").textContent = botMessage;
+    document.getElementById("messages").textContent = botMessage;
 
-
-
-   console.log(botMessage)
+    console.log(botMessage);
   } catch (error) {
     console.error("Error:", error);
     appendMessage(

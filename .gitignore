@@ -3,3 +3,5 @@
 node_modules/
 .vscode/
 firebaseAPI_TEAM99.js
+.env
+.gitignore
