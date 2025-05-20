@@ -31,8 +31,10 @@ var mongoStore = MongoStore.create({
 	}
 })
 
+
 // REQUIRES
 const app = express();
+app.use(express.json()); 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -51,6 +53,8 @@ app.use("/img", express.static("./image"));
 app.use('/text', express.static(path.join(__dirname, 'text'))); 
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 app.use('/', require('./routes/profileRoutes'));
+
+app.set('view engine', 'ejs');
 
 const routesPath = path.join(__dirname, 'routes'); 
 fs.readdirSync(routesPath)
@@ -87,6 +91,9 @@ app.get("/test", function (req, res) {
 app.get("/login", function (req, res) {
     let doc = fs.readFileSync("./text/login.html", "utf8");
     res.send(doc);
+});app.get("/reels", function (req, res) {
+  let doc = fs.readFileSync("./text/reel.html", "utf8");
+  res.send(doc);
 });
 app.get("/search", function (req, res) {
   let doc = fs.readFileSync("./text/search.html", "utf8");
@@ -113,11 +120,12 @@ app.post('/submitUser', async (req,res) => {
     const {
       name,
       username,
-      email,
+      rawemail = req.body.email.toLowerCase(),
       password,
       dob,        
       location
     } = req.body;
+    email = rawemail.toLowerCase();
   
     const schema = Joi.object({
       name:   Joi.string().max(50).required(),
@@ -191,88 +199,90 @@ app.post('/submitUser', async (req,res) => {
 
 // Login route
 app.post('/loggingin', async (req,res) => {
-  var email = req.body.email;
+  var email = req.body.email.toLowerCase();
   var password = req.body.password;
 
-const schema = Joi.string().max(20).required();
-const validationResult = schema.validate(email);
-if (validationResult.error != null) {
-  console.log(validationResult.error);
-  const html = `
-  <html>
-  <head>
-    <title>Invalid Credentials</title>
-    <link rel="stylesheet" href="/css/error.css">
-  </head>
-  <body>
-    <div class="error-container">
-      <h1>Invalid Email/Password</h1>
-      <p>The email and password combination you entered is incorrect. Please try again.</p>
-      <a href="/login">Try Again</a>
-    </div>
-  </body>
-  </html>
-  `;
-     res.send(html);
-   return;
-}
-
-const result = await userCollection.find({email: email}).project({email: 1, hashedPassword: 1, _id: 1}).toArray();
-
-console.log(result);
-
-if (result.length !== 1) {
-  const html = `
+  const schema = Joi.string().max(20).required();
+  const validationResult = schema.validate(email);
+  if (validationResult.error != null) {
+    console.log(validationResult.error);
+    const html = `
     <html>
     <head>
-      <title>User Not Found</title>
+      <title>Invalid Credentials</title>
       <link rel="stylesheet" href="/css/error.css">
     </head>
     <body>
       <div class="error-container">
-        <h1>User Not Found</h1>
-        <p>The user you are looking for could not be found.</p>
+        <h1>Invalid Email/Password</h1>
+        <p>The email and password combination you entered is incorrect. Please try again.</p>
         <a href="/login">Try Again</a>
       </div>
     </body>
     </html>
-  `;
-  res.send(html);
-  return;
-}
+    `;
+      res.send(html);
+    return;
+  }
 
-if (await bcrypt.compare(password, result[0].hashedPassword)) {
-  console.log("correct password");
-  req.session.authenticated = true;
-  req.session.email = email;
-  req.session.cookie.maxAge = expireTime;
-  req.session.userId        = result[0]._id.toString();
-  req.session.cookie.maxAge = expireTime;
+  const result = await userCollection.find({email: email}).project({email: 1, username: 1, hashedPassword: 1, _id: 1}).toArray();
 
-  res.redirect('/main');
-  return;
-}
-else {
-  const html = `
-  <html>
-  <head>
-    <title>Invalid Password</title>
-    <link rel="stylesheet" href="/css/error.css">
-  </head>
-  <body>
-    <div class="error-container">
-      <h1>Invalid Password</h1>
-      <p>The password you entered is incorrect. Please try again.</p>
-      <a href="/login">Try Again</a>
-    </div>
-  </body>
-  </html>
-  `;
-  
-  res.send(html);
-  
-}
+  console.log(result);
+
+  if (result.length !== 1) {
+    const html = `
+      <html>
+      <head>
+        <title>User Not Found</title>
+        <link rel="stylesheet" href="/css/error.css">
+      </head>
+      <body>
+        <div class="error-container">
+          <h1>User Not Found</h1>
+          <p>The user you are looking for could not be found.</p>
+          <a href="/login">Try Again</a>
+        </div>
+      </body>
+      </html>
+    `;
+    res.send(html);
+    return;
+  }
+
+  if (await bcrypt.compare(password, result[0].hashedPassword)) {
+    console.log("correct password");
+    req.session.authenticated = true;
+    req.session.username = result[0].username;
+    req.session.email = email;
+    req.session.cookie.maxAge = expireTime;
+    req.session.userId        = result[0]._id.toString();
+    req.session.cookie.maxAge = expireTime;
+
+    res.redirect('/main');
+    return;
+  }
+  else {
+    const html = `
+    <html>
+    <head>
+      <title>Invalid Password</title>
+      <link rel="stylesheet" href="/css/error.css">
+    </head>
+    <body>
+      <div class="error-container">
+        <h1>Invalid Password</h1>
+        <p>The password you entered is incorrect. Please try again.</p>
+        <a href="/login">Try Again</a>
+      </div>
+    </body>
+    </html>
+    `;
+    
+    res.send(html);
+    
+  }
 });
+
 app.get('/logout', (req,res) => {
 	req.session.destroy();
     var html = `
@@ -280,10 +290,24 @@ app.get('/logout', (req,res) => {
     `;
     res.send(html);
 });
+
+app.get("/profile", function (req, res) {
+    let doc = fs.readFileSync("./text/profile.html", "utf8");
+    res.send(doc);
+
+});
+
+app.get('/messages', (req, res) => {
+  res.sendFile(path.join(__dirname, 'text', 'messages.html'));
+});
+
+app.get('/inside_messages', (req, res) => {
+  res.sendFile(path.join(__dirname, 'text', 'inside_messages.html'));
+});
+
 app.get("/about", function (req, res) {
 
     let doc = fs.readFileSync("./about.html", "utf8");
-
     // just send the text stream
     res.send(doc);
 
@@ -292,7 +316,6 @@ app.get("/about", function (req, res) {
 app.get("/lists", function (req, res) {
 
     let doc = fs.readFileSync("./app/data/lists.js", "utf8");
-
     // just send the text stream
     res.send(doc);
 
@@ -309,15 +332,25 @@ app.get("/date", function (req, res) {
 
 });
 
-// for resource not found (i.e., 404)
-app.use(function (req, res, next) {
-    // this could be a separate file too - but you'd have to make sure that you have the path
-    // correct, otherewise, you'd get a 404 on the 404 (actually a 500 on the 404)
-    res.status(404).send("<html><head><title>Page not found!</title></head><body><p>Nothing here.</p></body></html>");
+// global catch for searching users --global catch for users' posts in postroutes.js
+app.get('/:username', async (req, res) => {
+  const username = req.params.username;
+
+  // if you goto a url that is your username, render your profile -- may change this to 
+  // same as profile.ejs with edit button.
+  if (username == req.session.username){
+    res.render("userProfile");
+  }
+  // if you goto a user that isnt you
+  else {
+  const findUser = await userCollection.find({username: username}).project({username: 1}).toArray();
+    if (findUser.length > 0){
+    res.render("profile", {username: username});
+    }  
+    // if no such user exists
+    else res.render("404");
+  }
 });
-
-
-
 
 // RUN SERVER
 let port = 8000;

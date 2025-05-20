@@ -35,6 +35,8 @@ router.get('/following', (req, res) => {
   res.send(readHTML('following.html'));
 });
 
+
+// code is giving me fat errors - Justin
 // GET /post/:id (Serve post detail page)
 router.get('/yourposts/:id', async (req, res) => {
   try {
