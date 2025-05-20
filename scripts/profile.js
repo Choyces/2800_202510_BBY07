@@ -65,6 +65,7 @@ window.onload = async () => {
 
       const link = document.createElement('a');
       link.href = `/post/${post._id}`;
+      link.href = `/yourposts/${post._id}`;
       link.className = 'text-decoration-none text-dark';
       link.style.textDecoration ="none";
       link.style.color = 'inherit';

@@ -4,7 +4,6 @@
 <head>
     <title>Main Page</title>
     <meta name="comp1800 template" content="My 1800 App">
-
     <!------------------------>
     <!-- Required meta tags -->
     <!------------------------>
@@ -44,51 +43,57 @@
     <!-- our own navbar goes here -->
     <nav id="navbarPlaceholder"></nav>
 
-    <!-- displays the main content -->
-    <div class="container-fluid" style="background-color: #c7c6c2; color: #817c7c;">
-        <div class="container py-5">
-            <div class="post-filter">
-                <button class="filter-btn" id="btn-follow">Follow</button>
-                <button class="filter-btn" id="btn-explore">Explore</button>
-                <button class="filter-btn" id="btn-nearby">Nearby</button>
+    <!-- Main Container -->
+    <div class="container mt-4" id="postContainer" data-post-id="<%= postID %>">
+        <p class="text-muted" id="postAuthor"><%= authorUsername  %></p> 
+         <h2 id="postTitle"><%= title  %></h2>
+        <hr>
+
+        <!-- Post Content -->
+        <div class="mb-3">
+            <p id="postContent"><%= text  %></p>
+        </div>
+
+        <!-- Image display IF post has image -->
+        <% if (photoUrl) { %>
+            <div class="mb-3">
+                <img id="postImage" src="<%= photoUrl %>" alt="Post Image" class="img-fluid">
             </div>
-            <h1 class="text-center fw-bold text-wrap"
-                style="color: #080c0c; font-size: clamp(1.5rem, 5vw, 3rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                Good hunt for slang, <br><span id="name-goes-here" style="color: #2a656f;"></span>
-            </h1>
-            <hr style="border-top: 3px solid #EEC0C6; width: 50%; margin: 1rem auto;">
+        <% } %>
+        <p class="text-muted" id="postDate"><%= createdAt  %></p>
+        <button onclick="likePost()" id="likebutton" class="btn btn-outline-primary">Like this post</button>
+
+
+
+        <!-- Comment Section -->
+        <div class="container mt-4">
+            <h4>Comments</h4>
+            <% if (comments) { %>
+                <% for (let comment of comments) { %>
+                            <!-- style this in css please -->
+                    <div id="commentsContainer" class="mt-3">
+                        <a href="/<%= commentUserMap[comment.userId.toString()] %>" style="font-weight: bolder;"> <%= commentUserMap[comment.userId.toString()] %></a>
+                        <p> <%= comment.text %> </p> 
+                        <small> <%= comment.createdAt %> </small>                
+               
+                        <% } %>
+            <% } %>
         </div>
-        
     </div>
+    <div id="postError" class="alert alert-danger d-none"></div>
 
- 
-    <!-- Displays the popular posts -->
-    <div class="container mt-4">
-        <h2 class="mb-4 text-center">🔥 Some Popular Posts 🔥</h2>
-
-        <!-- Post Cards Grid -->
-        <div id="posts-go-here" class="row g-4 justify-content-center">
-            <!-- Cards will be injected here -->
-        </div>
+    <div class="container mt-4" data-post-id="<%= postID %>">
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+              <form id="commentForm" class="d-flex">
+                  <input type="text" id="commentInput" class="form-control me-2" 
+                         placeholder="Add a comment..." aria-label="Comment">
+                  <button onclick="addComment()" class="btn btn-outline-primary" type="submit">Submit</button>
+              </form> 
+          </div>
+      </div>
     </div>
-
-    <!-- Template for cards (not visible) -->
-    <template id="postCardTemplate">
-        <div class="col-md-4 col-sm-6">
-            <div class="card h-100 shadow-sm post-card">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title fw-bold text-primary"></h5>
-                    <p class="card-text text-muted flex-grow-1"></p>
-                    <a class="card-author mb-1 text-dark small fw-semibold"></a>
-                    <p href="" class="card-date mb-2 text-secondary small"></p>
-                    <a href="#" class="btn btn-outline-primary mt-auto read-more-btn">Read More</a>
-                </div>
-            </div>
-        </div>
-    </template>
-
-
-    <!-- our own footer goes here-->
+    <!-- footer goes here-->
     <nav id="footerPlaceholder"></nav>
 
     <!---------------------------------------------->
@@ -97,7 +102,5 @@
     <script src="/js/skeleton.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/footer.js"></script>
-
 </body>
-
 </html>
