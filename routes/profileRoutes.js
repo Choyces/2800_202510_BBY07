@@ -122,7 +122,7 @@ router.post('/profile/update', async (req, res) => {
 });
 
 // Route edit post page
-router.get('/yourposts/:id/edit',(req,res) =>{
+router.get('/postEdit/:id/edit',(req,res) =>{
   res.send(readHTML('postEdit.html'));
 })
 
@@ -161,6 +161,7 @@ router.delete('/api/post/:id', async (req, res) => {
     console.error('Error deleting post:', err);
     res.status(500).send('Server error');
   }
+ 
 });
 
 module.exports = router;
