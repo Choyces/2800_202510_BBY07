@@ -23,6 +23,8 @@ const node_session_secret = process.env.NODE_SESSION_SECRET;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const { client, db } = require('./databaseconnection'); 
 const userCollection = db.collection('users');
+const postsCollection = db.collection('posts');
+
 
 var mongoStore = MongoStore.create({
 	mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/sessions`,
@@ -335,22 +337,26 @@ app.get("/date", function (req, res) {
 // global catch for searching users --global catch for users' posts in postroutes.js
 app.get('/:username', async (req, res) => {
   const username = req.params.username;
+  try {
+    const user = await userCollection.findOne({ username: username });
 
-  // if you goto a url that is your username, render your profile -- may change this to 
-  // same as profile.ejs with edit button.
-  if (username == req.session.username){
-    res.render("userProfile");
+    if (!user) {
+      return res.status(404).render("404");
+    }
+    const posts = await postsCollection.find({ author: user._id }).toArray();
+
+    // If it's your own profile
+    if (username === req.session.username) {
+      return res.render("userProfile", { user, posts});
+    }
+
+    // Someone else's profile
+    return res.render("profile", { user , posts});
+  } catch (err) {
+    console.error("Error in /:username route:", err);
+    return res.status(500).send("Server error occurred.");
   }
-  // if you goto a user that isnt you
-  else {
-  const findUser = await userCollection.find({username: username}).project({username: 1}).toArray();
-    if (findUser.length > 0){
-    res.render("profile", {username: username});
-    }  
-    // if no such user exists
-    else res.render("404");
-  }
-});
+  });
 
 // RUN SERVER
 let port = 8000;
