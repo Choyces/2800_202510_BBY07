@@ -287,6 +287,10 @@ router.get('/:username/post/:postID', async (req, res) => {
           { $inc: { "stats.views": 1 } }
         );
         
+        //add this -qian
+        const currentUserId = req.session.userId;
+        const isAuthor = currentUserId && postDataWithAuthor[0].author.toString() === currentUserId;
+
         res.render("insidePost", {
           postID: postID.toString(),
           title: postDataWithAuthor[0].title,
@@ -297,6 +301,7 @@ router.get('/:username/post/:postID', async (req, res) => {
           createdAt: postDataWithAuthor[0].createdAt,
           authorUsername: authorMap[postDataWithAuthor[0].author.toString()] || "Unknown",
           commentUserMap: commentUserMap,
+          isAuthor: isAuthor
         });
       }
     else {

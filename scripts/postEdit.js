@@ -21,7 +21,7 @@ window.onload = async () => {
   
       if (res.ok) {
         alert('Updated!');
-        window.location.href = `/post/${postId}`;
+        window.location.href = `/yourposts/${postId}`;
       } else {
         alert('Failed to update');
       }
