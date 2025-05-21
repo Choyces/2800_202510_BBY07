@@ -63,7 +63,7 @@
                 <div class="px-4 pt-0 pb-4 cover">
                     <div class="media align-items-end profile-head">
                         <div class="profile mr-3">
-                            <img id="profileAvatar" src="<%= user.avatar || '/img/default-avatar.png' %>" width="130" class="rounded mb-2">
+                            <img id="profileAvatar" src="<%= user.avatarUrl || '/img/default-avatar.png' %>" width="130" class="rounded mb-2">
                             <!-- <a href="/editProfile" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a> -->
                         </div>
                         <div class="media-body mb-5 text-white">
@@ -124,7 +124,7 @@
                                     <div class="card-body">
                                         <h5 class="card-title"><%= post.title %></h5>
                                         <p class="card-text"><%= post.text %></p>
-                                        <a href="/posts/<%= post._id %>" class="btn btn-primary">View</a>
+                                        <a href="/yourposts/<%= post._id %>" class="btn btn-primary">View</a>
                                     </div>
                                 </div>
                             </div>
