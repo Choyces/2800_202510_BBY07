@@ -38,16 +38,16 @@ router.get('/following', (req, res) => {
 
 // code is giving me fat errors - Justin
 // GET /post/:id (Serve post detail page)
-// router.get('/post/:id', async (req, res) => {
-//   try {
-//     const post = await postCollection.findOne({ _id: new ObjectId(req.params.id) });
-//     if (!post) return res.status(404).send('Post not found');
-//     res.send(readHTML('postDetail.html'));
-//   } catch (err) {
-//     console.error('Error loading post page:', err);
-//     res.status(500).send('Server error');
-//   }
-// });
+router.get('/yourposts/:id', async (req, res) => {
+  try {
+    const post = await postCollection.findOne({ _id: new ObjectId(req.params.id) });
+    if (!post) return res.status(404).send('Post not found');
+    res.send(readHTML('postDetail.html'));
+  } catch (err) {
+    console.error('Error loading post page:', err);
+    res.status(500).send('Server error');
+  }
+});
 
 // ---------- API Routes ----------
 
@@ -121,15 +121,10 @@ router.post('/profile/update', async (req, res) => {
   }
 });
 
-// // Route edit post page
-// router.get('/post/:id/edit',(req,res) =>{
-//   res.send(readHTML('postEdit.html'));
-// })
-// // Route post detail page
-// router.get('/post/:id', (req, res) => {
-//   res.send(readHTML('postDetail.html')); 
-// });
-
+// Route edit post page
+router.get('/postEdit/:id/edit',(req,res) =>{
+  res.send(readHTML('postEdit.html'));
+})
 
 // GET /api/post/:id (Fetch single post)
 router.get('/api/post/:id', async (req, res) => {
@@ -166,6 +161,7 @@ router.delete('/api/post/:id', async (req, res) => {
     console.error('Error deleting post:', err);
     res.status(500).send('Server error');
   }
+ 
 });
 
 module.exports = router;

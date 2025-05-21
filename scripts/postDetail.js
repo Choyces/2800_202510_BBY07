@@ -18,7 +18,7 @@ window.onload = async () => {
   };
   
   function editPost(id) {
-    window.location.href = `/post/${id}/edit`;
+    window.location.href = `/postEdit/${id}/edit`;
   }
   
   async function deletePost(id) {
