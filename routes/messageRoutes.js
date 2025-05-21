@@ -142,13 +142,11 @@ router.delete('/conversations/:id', async (req, res) => {
   const convoId = new ObjectId(req.params.id);
   const me = new ObjectId(req.session.userId);
   try {
-    const {value: convo} = await db
-      .collection('conversations')
-      .findOneAndUpdate(
-        {_id: convoId},
-        {$addToSet: { deletedBy: me}},
-        {returnDocument: 'after'}
-      );
+    await db.collection('conversations').updateOne(
+      {_id: convoId},
+      {$addToSet: {deletedBy: me}}
+    );
+    const convo = await db.collection('conversations').findOne({_id: convoId});
     if (!convo) return res.json({success: true});
     if (convo.deletedBy.length >= convo.participants.length) {
       await Promise.all([
@@ -158,7 +156,7 @@ router.delete('/conversations/:id', async (req, res) => {
     }
     return res.json({success: true});
   } catch (err) {
-    console.error('💥 DELETE /conversations/:id', err);
+    console.error('DELETE /conversations/:id', err);
     return res.status(500).json({error: 'Could not delete conversation'});
   }
 });
