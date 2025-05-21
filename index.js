@@ -103,10 +103,6 @@ app.get("/search", function (req, res) {
   let doc = fs.readFileSync("./text/search.html", "utf8");
   res.send(doc);
 });
-app.get("/notification", function (req, res) {
-  let doc = fs.readFileSync("./text/notification.html", "utf8");
-  res.send(doc);
-});
 app.get("/messages", function (req, res) {
   let doc = fs.readFileSync("./text/messages.html", "utf8");
   res.send(doc);
@@ -159,7 +155,7 @@ app.post('/submitUser', async (req,res) => {
         dob:      dob ? new Date(dob) : undefined,
         location: location || '',
         bio:       '',
-        avatarUrl: '',
+        avatarUrl: '/image/default-avatar.png',
         privacySettings: {
           notificationsEnabled: true,
           profilePublic:        true

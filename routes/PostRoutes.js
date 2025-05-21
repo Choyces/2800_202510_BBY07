@@ -150,6 +150,19 @@ router.post('/like/:postID', async (req, res) => {
         { $inc: { "stats.likes": 1 } }
       );
 
+      // Create Like notification
+      const postDoc = await posts.findOne({ _id: new ObjectId(postId) });
+      await db.collection('notifications').insertOne({
+        recipient:   postDoc.author,          
+        sender:      new ObjectId(userId),    
+        senderUsername: req.session.username,
+        postId:      new ObjectId(postId),
+        postTitle:   postDoc.title,
+        type:        'like',
+        read:        false,
+        createdAt:   new Date()
+      });
+
       return res.json({ success: true });
     } catch (err) {
       console.error("Error liking post:", err);
@@ -202,6 +215,20 @@ router.post('/createComment/:postID', async (req, res) => {
       { _id: new ObjectId(postId) },
       { $push: { comments: commentData } }
     );
+
+    // Create comment notification
+    const postDoc = await posts.findOne({ _id: new ObjectId(postId) });
+    await db.collection('notifications').insertOne({
+      recipient: postDoc.author,
+      sender: new ObjectId(userId),
+      senderUsername: req.session.username,
+      postId: new ObjectId(postId),
+      postTitle: postDoc.title,
+      commentText: commentData.text,
+      type: 'comment',
+      read: false,
+      createdAt: new Date()
+    });
 
     console.log("commentData", commentData);
     console.log("comment added");
