@@ -15,10 +15,31 @@ const readHTML = (filename) => {
 
 // ---------- Static HTML Routes ----------
 
-// GET /profile
-router.get('/profile', (req, res) => {
-  res.send(readHTML('profile.html'));
+
+router.get('/userProfile', async (req, res) => {
+  if (!req.session.authenticated) {
+    return res.redirect('/login'); // or wherever your login route is
+  }
+
+  try {
+    const user = await userCollection.findOne(
+      { _id: new ObjectId(req.session.userId) },
+      { projection: { name: 1, email: 1, location: 1, bio: 1, avatarUrl: 1 } }
+    );
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    const posts = await postCollection.find({ author: new ObjectId(req.session.userId) }).toArray();
+
+    res.render('userProfile', { user, posts }); 
+  } catch (err) {
+    console.error('Error rendering profile:', err);
+    res.status(500).send('Server error');
+  }
 });
+
 
 // GET /editProfile
 router.get('/editProfile', (req, res) => {

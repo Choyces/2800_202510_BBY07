@@ -54,7 +54,7 @@ app.use("/css", express.static("./styles"));
 app.use("/img", express.static("./image"));
 app.use('/text', express.static(path.join(__dirname, 'text'))); 
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
-app.use('/', require('./routes/profileRoutes'));
+// app.use('/', require('./routes/profileRoutes'));
 
 app.set('view engine', 'ejs');
 
@@ -291,12 +291,6 @@ app.get('/logout', (req,res) => {
     You are logged out.
     `;
     res.send(html);
-});
-
-app.get("/profile", function (req, res) {
-    let doc = fs.readFileSync("./text/profile.html", "utf8");
-    res.send(doc);
-
 });
 
 app.get('/messages', (req, res) => {
