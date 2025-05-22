@@ -100,6 +100,9 @@ h2.text-center {
     margin-bottom: 20px;
 }
 
+.container:last-of-type{
+      margin-bottom: 100px;
+}
 .filter-btn {
     border-radius: 25px;
     padding: 12px 20px;

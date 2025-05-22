@@ -53,7 +53,70 @@ router.get('/following', (req, res) => {
   res.send(readHTML('following.html'));
 });
 
-router.get('/post/:id', async (req, res) => {
+// follow
+router.post('/follow/:targetUserId', async (req, res) => {
+  const currentUserId = req.session.userId;
+  const { targetUserId } = req.params;
+  if (!currentUserId) {
+    return res.status(401).json({ error: 'Please log in first' });
+  }
+  if (currentUserId === targetUserId) {
+    return res.status(400).json({ error: "You can't follow yourself" });
+  }
+
+  try {
+    const currentUser = await userCollection.findOne({ _id: new ObjectId(currentUserId) });
+    const targetUser = await userCollection.findOne({ _id: new ObjectId(targetUserId) });
+
+    if (!currentUser || !targetUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const currentFollowing = currentUser.following || [];
+    const targetFollowers = targetUser.followers || [];
+
+
+    const alreadyFollowing = currentFollowing.some(id => id.toString() === targetUserId);
+
+    if (alreadyFollowing) {
+      const updatedFollowing = currentFollowing.filter(id => id.toString() !== targetUserId);
+      const updatedFollowers = targetFollowers.filter(id => id.toString() !== currentUserId);
+
+
+      await userCollection.updateOne(
+        { _id: new ObjectId(currentUserId) },
+        { $set: { following: updatedFollowing } }
+      );
+      await userCollection.updateOne(
+        { _id: new ObjectId(targetUserId) },
+        { $set: { followers: updatedFollowers } }
+      );
+
+      return res.json({ success: true, following: false });
+    } else {
+      currentFollowing.push(new ObjectId(targetUserId));
+      targetFollowers.push(new ObjectId(currentUserId));
+
+      await userCollection.updateOne(
+        { _id: new ObjectId(currentUserId) },
+        { $set: { following: currentFollowing } }
+      );
+      await userCollection.updateOne(
+        { _id: new ObjectId(targetUserId) },
+        { $set: { followers: targetFollowers } }
+      );
+
+      return res.json({ success: true, following: true });
+    }
+
+  } catch (err) {
+    return res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+// GET /post/:id (Serve post detail page)
+router.get('/yourposts/:id', async (req, res) => {
   try {
     if (!ObjectId.isValid(req.params.id)) {
       return res.status(400).send('Invalid ID');

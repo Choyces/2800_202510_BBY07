@@ -92,9 +92,14 @@ app.get("/weather", function(req, res) {
   res.send(doc);
 });
 app.get("/test", function (req, res) {
-  let doc = fs.readFileSync("./test.html", "utf8");
+  let doc = fs.readFileSync("./text/test.html", "utf8");
   res.send(doc);
 });
+app.get("/game", function (req, res) {
+  let doc = fs.readFileSync("./text/game.html", "utf8");
+  res.send(doc);
+});
+
 app.get("/login", function (req, res) {
     let doc = fs.readFileSync("./text/login.html", "utf8");
     res.send(doc);

@@ -72,41 +72,92 @@ async function displayPosts() {
 async function showLikebutton() {
   const postID = document.querySelector('#postContainer').getAttribute('data-post-id');
   const likeButton = document.getElementById("likebutton");
-  const container = document.getElementById("posts-go-here");
+
   try {
-    const userLiked = await getLiked();
-    const selectedPosts = selectRandomPosts(postsArray);
-    
-    for (const post of selectedPosts) {
-      const newCard = await processSinglePost(post, cardTemplate);
-      container.appendChild(newCard);
+    const res = await fetch('/post/liked');
+    const likedPosts = await res.json();
+    console.log(likedPosts);
+    const isLiked = likedPosts.some(post => post._id === postID); 
+    console.log(isLiked);
+
+    // If the post is liked, change the button text and style
+    if (isLiked) {
+      likeButton.innerText = "Liked";
+      likeButton.classList.add('btn-primary');
+      likeButton.classList.remove('btn-outline-primary');
+    } else {
+      likeButton.innerText = "Like this post";
+      likeButton.classList.add('btn-outline-primary');
+      likeButton.classList.remove('btn-primary');
     }
-  } catch (error) {
-    console.error("Error displaying posts: ", error);
+  } catch (err) {
+    console.error("Error fetching liked posts:", err);
   }
 }
 
   //like button function
-async function likePost(){
+async function likePost() {
   const postID = document.querySelector('#postContainer').getAttribute('data-post-id');
+  const likeButton = document.getElementById('likebutton');
+
   try {
     const res = await fetch(`/like/${postID}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-      },
+      }
     });
 
-    const result = await res.json()
-    if (result.success){
-      if (document.getElementById('likebutton').innerText == "Liked") {
-        document.getElementById('likebutton').innerText = "Like this post";
+    const result = await res.json();
+
+    if (result.success) {
+      if (result.liked) {
+        likeButton.innerText = "Liked";
+        likeButton.classList.add('btn-primary');
+        likeButton.classList.remove('btn-outline-primary');
       } else {
-        document.getElementById('likebutton').innerText = "Liked";
-      };
+        likeButton.innerText = "Like this post";
+        likeButton.classList.add('btn-outline-primary');
+        likeButton.classList.remove('btn-primary');
+      }
     }
-  } catch (err) {console.error("Error adding comment info:", err);}
-};
+  } catch (err) {
+    console.error("Error processing like/unlike:", err);
+  }
+}
+
+//follow functiopn
+
+async function follow() {
+  const el = document.querySelector('.userContainer');
+  let followId = el.id;
+  const followButton = document.getElementById('followButton');
+
+  try {
+    const res = await fetch(`/follow/${followId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+      if (result.liked) {
+        followButton.innerText = "Folllowed";
+        followButton.classList.add('btn-primary');
+        followButton.classList.remove('btn-outline-primary');
+      } else {
+        followButton.innerText = "Follow";
+        followButton.classList.add('btn-outline-primary');
+        followButton.classList.remove('btn-primary');
+      }
+    }
+  } catch (err) {
+    console.error("Error processing like/unlike:", err);
+  }
+}
 
 async function addComment() {
   const commentText = document.getElementById('commentInput').value;
@@ -133,11 +184,6 @@ async function addComment() {
     console.error("Error adding comment info:", err);
   }
 }
-
-// Initialize functions
-document.addEventListener('DOMContentLoaded', () => {
-  displayPosts();
-});
 
 // Fetch and display the current user's username in the greeting
 async function displayUsername() {
@@ -208,6 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
   displayPosts();
   displayUsername();
   setupFilterButtons(); 
+  showLikebutton();
 });
 
 // delete function

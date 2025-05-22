@@ -58,7 +58,7 @@
 
     <!-- the body of your page goes here -->
     <!-- yooo this is someone elses profile but its a placeholder good job -->
-    <div class="row py-5 px-4">
+    <div class="userContainer row py-5 px-4" id="<%= user._id %>">
         <div class="col-md-5 mx-auto">
             <div class="bg-white shadow rounded overflow-hidden">
                 <div class="px-4 pt-0 pb-4 cover">
@@ -101,7 +101,7 @@
                     </ul>
                 </div>
                 <div>
-                    <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-dark btn-rounded btn-sm"
+                    <button onclick="follow()" type="button" id="followButton" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-dark btn-rounded btn-sm"
                       data-mdb-ripple-color="dark">+ Follow</button>
                     <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-dark btn-floating btn-sm"
                       data-mdb-ripple-color="dark"><i class="fas fa-comment"></i></button>
@@ -141,6 +141,7 @@
     Your own JavaScript functions go here   
     <!---------------------------------------------->
     <script src="/js/profile.js"></script> 
+    <script src="/js/main.js"></script>
     <script src="/js/skeleton.js"></script>
     <script src="/js/footer.js"></script>
     <script src="/js/navbar.js"></script>

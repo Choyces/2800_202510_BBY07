@@ -49,36 +49,6 @@ router.get('/post/data', async (req, res) => {
   }
 });
 
-//get EVERY liked post by current logged in user
-router.get('/post/liked', async (req, res) => {
-  const userId = req.session.userId;
-  if (!userId) {
-    return res.status(401).json({ error: 'Please log in first' });
-  }
-  try {
-  const postsArray = await posts.find().project({author: 1, title: 1, text: 1, photoUrl: 1, comments: 1, createdAt: 1}).toArray();
-    // this is gptd code to convert userid to username 
-    const authorIds = [...new Set(postsArray.map(post => post.author))];
-    const authors = await users.find({ _id: { $in: authorIds } })
-      .project({ username: 1 })
-      .toArray();
-      const authorMap = {};
-      authors.forEach(user => {
-      authorMap[user._id.toString()] = user.username;
-    });
-    const postData = postsArray.map(post => ({
-      ...post,
-      authorUsername: authorMap[post.author.toString()] || "Unknown"
-    }));
-
-    res.json(postData);
-    }
-    catch (err) {
-    console.error("error with post data:", err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
 router.get('/makepost', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'text', 'makepost.html'));
 });
@@ -125,73 +95,71 @@ router.post('/makepost', upload.single('photo'),
   }
 );
 
+// GET /post/liked to fetch all posts the current user has liked
+router.get('/post/liked', async (req, res) => {
+  const userId = req.session.userId;
+  if (!userId) {
+    return res.status(401).json({ error: 'Please log in first' });
+  }
+
+  try {
+    const user = await users.findOne({ _id: new ObjectId(userId) });
+    const likedPosts = user.likes || [];
+    const likedPostsData = await posts.find({ _id: { $in: likedPosts } })
+      .project({ _id: 1 }) 
+      .toArray();
+
+    res.json(likedPostsData); 
+  } catch (err) {
+    console.error("Error fetching liked posts:", err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// POST /like/:postID for liking and unliking
+
 router.post('/like/:postID', async (req, res) => {
   const userId = req.session.userId;
-  const postId = req.params.postID;
+  const { postID } = req.params;
+
+  console.log("Incoming like request:");
+  console.log("Session userId:", userId);
+  console.log("Post ID:", postID);
 
   if (!userId) {
-    return res.status(401).json({ success: false, message: 'Not logged in' });
+    console.log("Unauthorized: No user session");
+    return res.status(401).json({ error: 'Please log in first' });
   }
-  const result = await posts.find({liked: userId}).project({}).toArray();
-  if (result.length == 0) {
-    try {
-      // add to user's likes
+
+  try {
+    const user = await users.findOne({ _id: new ObjectId(userId) });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const likedPosts = user.likes || [];
+    const alreadyLiked = likedPosts.some(id => id.toString() === postID);
+
+    if (alreadyLiked) {
+    const updatedLikes = likedPosts.filter(id => new ObjectId(id).toString() !== postID);
       await users.updateOne(
         { _id: new ObjectId(userId) },
-        { $addToSet: { likes: new ObjectId(postId) } })
-      // add user to post's liked list
-      await posts.updateOne(
-        { _id: new ObjectId(postId) },
-        { $addToSet: { liked: new ObjectId(userId) } }
+        { $set: { likes: updatedLikes } }
       );
-      // increment like count
-      await posts.updateOne(
-        { _id: new ObjectId(postId) },
-        { $inc: { "stats.likes": 1 } }
-      );
+      return res.json({ success: true, liked: false });
 
-      // Create Like notification
-      const postDoc = await posts.findOne({ _id: new ObjectId(postId) });
-      await db.collection('notifications').insertOne({
-        recipient:   postDoc.author,          
-        sender:      new ObjectId(userId),    
-        senderUsername: req.session.username,
-        postId:      new ObjectId(postId),
-        postTitle:   postDoc.title,
-        type:        'like',
-        read:        false,
-        createdAt:   new Date()
-      });
-
-      return res.json({ success: true });
-    } catch (err) {
-      console.error("Error liking post:", err);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-  }
-  else {
-    try {
-      // remove from user's likes
+    } else {
+      likedPosts.push(new ObjectId(postID));
       await users.updateOne(
         { _id: new ObjectId(userId) },
-        { $pull: { likes: new ObjectId(postId) } }
-      );
-      // remove user from post's liked list
-      await posts.updateOne(
-        { _id: new ObjectId(postId) },
-        { $pull: { liked: new ObjectId(userId) } }
-      );
-      // decrement like count
-      await posts.updateOne(
-        { _id: new ObjectId(postId) },
-        { $inc: { "stats.likes": -1 } }
+        { $set: { likes: likedPosts } }
       );
 
-      return res.json({ success: true });
-    } catch (err) {
-      console.error("Error unliking post:", err);
-      return res.status(500).json({ error: "Internal Server Error" });
+      return res.json({ success: true, liked: true });
     }
+  } catch (err) {
+    return res.status(500).json({ error: 'Server error' });
   }
 });
 
