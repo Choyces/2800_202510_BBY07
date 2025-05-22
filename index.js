@@ -58,7 +58,7 @@ app.use("/css", express.static("./styles"));
 app.use("/img", express.static("./image"));
 app.use('/text', express.static(path.join(__dirname, 'text'))); 
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
-app.use('/', require('./routes/profileRoutes'));
+// app.use('/', require('./routes/profileRoutes'));
 
 app.set('view engine', 'ejs');
 
@@ -289,10 +289,17 @@ app.get('/logout', (req,res) => {
     res.send(html);
 });
 
+app.get('/messages', (req, res) => {
+  res.sendFile(path.join(__dirname, 'text', 'messages.html'));
+});
+
+app.get('/inside_messages', (req, res) => {
+  res.sendFile(path.join(__dirname, 'text', 'inside_messages.html'));
+});
+
 app.get("/profile", function (req, res) {
     let doc = fs.readFileSync("./text/profile.html", "utf8");
     res.send(doc);
-
 });
 
 app.get("/about", function (req, res) {
@@ -352,7 +359,7 @@ app.listen(port, function () {
     console.log("Example app listening on port " + port + "!");
 });
 
-app.use((req, res, next) => {
-  console.log(`Incoming request: ${req.method} ${req.url}`);
-  next();
-});
+// app.use((req, res, next) => {
+//   // console.log(`Incoming request: ${req.method} ${req.url}`);
+//   next();
+// });

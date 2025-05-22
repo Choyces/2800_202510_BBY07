@@ -1,0 +1,95 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>My BCIT Project</title>
+    <meta name="comp2800 template" content="My 2800 App">
+
+    <!------------------------>
+    <!-- Required meta tags -->
+    <!------------------------>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!------------------------------------------>
+    <!-- Bootstrap Library CSS JS CDN go here -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+   
+    <!------------------------------------------>
+
+
+    <!-------------------------------------------------------->
+    <!-- Firebase 8 Library related CSS, JS, JQuery go here -->
+    <!-------------------------------------------------------->
+
+    <!-------------------------------------------->
+    <!-- Other libraries and styles of your own -->
+    <!-------------------------------------------->
+    <!-- <link rel="stylesheet" href="/css/profile.css"> -->
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    
+      
+
+</head>
+
+<body>
+    <!------------------------------>
+    <!-- Your HTML Layout go here -->
+    <!------------------------------>
+
+    <!-- navbar -->
+    <nav id="navbarPlaceholder"></nav>
+   
+
+    <!-- the body of your page goes here -->
+    <div class="container py-4">
+        <h3>Edit Post</h3>
+        <form id="editForm">
+          <input type="text" id="title" name="title" class="form-control mb-2" value="<%= post.title %>" />
+          <textarea id="text" name="text" class="form-control mb-2"><%= post.text %></textarea>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+  
+    <!-- our own footer goes here -->
+    <nav id="footerPlaceholder"></nav>
+    <!-- ------------------------------------------
+    Your own JavaScript functions go here   
+    <!---------------------------------------------->
+    <!-- <script src="/js/profile.js"></script>  -->
+    <script src="/js/skeleton.js"></script>
+    <script src="/js/footer.js"></script>
+    <script>
+        const postId = "<%= post._id.toString() %>";
+        document.getElementById('editForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const updated = {
+            title: document.getElementById('title').value,
+            text: document.getElementById('text').value,
+        };
+
+        const res = await fetch(`/api/post/${postId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updated),
+        });
+
+        if (res.ok) {
+            alert('Updated!');
+            window.location.href = `/post/${postId}`;
+        } else {
+            alert('Failed to update');
+        }
+        };
+    </script>
+
+</body>
+</html> 
+

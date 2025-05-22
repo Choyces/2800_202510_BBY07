@@ -15,16 +15,34 @@ const readHTML = (filename) => {
 
 // ---------- Static HTML Routes ----------
 
-// GET /profile
-router.get('/profile', (req, res) => {
-  res.send(readHTML('profile.html'));
-});
 
+router.get('/userProfile', async (req, res) => {
+  if (!req.session.authenticated) {
+    return res.redirect('/login'); 
+  }
+
+  try {
+    const user = await userCollection.findOne(
+      { _id: new ObjectId(req.session.userId) },
+      { projection: { name: 1, email: 1, location: 1, bio: 1, avatarUrl: 1 } }
+    );
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    const posts = await postCollection.find({ author: new ObjectId(req.session.userId) }).toArray();
+
+    res.render('userProfile', { user, posts }); 
+  } catch (err) {
+    console.error('Error rendering profile:', err);
+    res.status(500).send('Server error');
+  }
+});
 // GET /editProfile
 router.get('/editProfile', (req, res) => {
   res.send(readHTML('editProfile.html'));
 });
-
 // GET /followers
 router.get('/followers', (req, res) => {
   res.send(readHTML('followers.html'));
@@ -35,46 +53,37 @@ router.get('/following', (req, res) => {
   res.send(readHTML('following.html'));
 });
 
-
-// code is giving me fat errors - Justin
-// GET /post/:id (Serve post detail page)
-router.get('/yourposts/:id', async (req, res) => {
+router.get('/post/:id', async (req, res) => {
   try {
+    if (!ObjectId.isValid(req.params.id)) {
+      return res.status(400).send('Invalid ID');
+    }
+
     const post = await postCollection.findOne({ _id: new ObjectId(req.params.id) });
     if (!post) return res.status(404).send('Post not found');
-    res.send(readHTML('postDetail.html'));
+    const currentUserId = req.session.user ? req.session.user._id : null;
+
+    res.render('postDetail', { post:post, currentUserId:currentUserId ? currentUserId.toString() : null  });  
   } catch (err) {
-    console.error('Error loading post page:', err);
+    console.error('Error rendering post:', err);
     res.status(500).send('Server error');
   }
 });
 
-// ---------- API Routes ----------
+router.get('/profile', async (req, res) => {
+  if (!req.session.authenticated) return res.redirect('/login');
 
-// GET /profile/data (User profile data + posts)
-router.get('/profile/data', async (req, res) => {
-  if (!req.session.authenticated) {
-    return res.status(401).json({ error: 'Please log in first' });
-  }
-
+  const userId = req.session.userId;
   try {
-    const user = await userCollection.findOne(
-      { _id: new ObjectId(req.session.userId) },
-      { projection: { name: 1, email: 1, location: 1, bio: 1, avatarUrl: 1 } }
-    );
+    const user = await users.findOne({ _id: new ObjectId(userId) });
+    const userPosts = await posts.find({ author: new ObjectId(userId) }).toArray();
 
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    const posts = await postCollection.find({ author: new ObjectId(req.session.userId) }).toArray();
-    res.json({ user, posts });
+    res.render('profile', { user, posts: userPosts });
   } catch (err) {
-    console.error('Failed to fetch user profile:', err);
-    res.status(500).json({ error: 'Server error' });
+    console.error(err);
+    res.status(500).send('error');
   }
 });
-
 
 // POST /profile/update (Update profile info)
 router.post('/profile/update', async (req, res) => {
@@ -121,22 +130,28 @@ router.post('/profile/update', async (req, res) => {
   }
 });
 
-// Route edit post page
-router.get('/postEdit/:id/edit',(req,res) =>{
-  res.send(readHTML('postEdit.html'));
-})
 
-// GET /api/post/:id (Fetch single post)
-router.get('/api/post/:id', async (req, res) => {
+router.get('/postEdit/:id/edit', async (req, res) => {
   try {
-    const post = await postCollection.findOne({ _id: new ObjectId(req.params.id) });
-    if (!post) return res.status(404).json({ error: 'Not found' });
-    res.json(post);
+    const postId = req.params.id;
+    if (!ObjectId.isValid(postId)) {
+      return res.status(400).send('Invalid ID');
+    }
+
+    const post = await postCollection.findOne({ _id: new ObjectId(postId) });
+    if (!post) return res.status(404).send('Post not found');
+
+    if (post.author.toString() !== req.session.userId) {
+      return res.status(403).send('Forbidden');
+    }
+
+    res.render('postEdit', { post });
   } catch (err) {
-    console.error('Error fetching post:', err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Edit page error:', err);
+    res.status(500).send('Server error');
   }
 });
+
 
 router.put('/api/post/:id', async (req, res) => {
   try {
@@ -152,16 +167,36 @@ router.put('/api/post/:id', async (req, res) => {
   }
 });
 
-// DELETE /api/post/:id (Delete post)
 router.delete('/api/post/:id', async (req, res) => {
+  if (!req.session.authenticated) {
+    return res.status(401).send('Unauthorized');
+  }
+
+  const postId = req.params.id;
+
+  if (!ObjectId.isValid(postId)) {
+    return res.status(400).send('Invalid post ID');
+  }
+
   try {
-    const result = await postCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+    const post = await postCollection.findOne({ _id: new ObjectId(postId) });
+
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
+
+    if (post.author.toString() !== req.session.userId) {
+      return res.status(403).send('Forbidden: You are not the author');
+    }
+
+    await postCollection.deleteOne({ _id: new ObjectId(postId) });
+
     res.status(200).send('Deleted');
   } catch (err) {
     console.error('Error deleting post:', err);
     res.status(500).send('Server error');
   }
- 
 });
+
 
 module.exports = router;
