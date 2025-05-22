@@ -20,20 +20,43 @@
 </head>
 
 <body class="d-flex flex-column vh-100">
+
   <nav id="navbarPlaceholder"></nav>
+
   <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom flex-shrink-0">
     <button id="deleteModeBtn" class="icon-btn me-3">
       <i class="bi bi-dash-circle"></i>
     </button>
-    <h1 class="h4 m-0 text-center flex-grow-1">Messages</h1>
+    <h1 class="h2 m-0 text-center flex-grow-1">Messages</h1>
     <button id="newConvBtn" class="icon-btn ms-3">
       <i class="bi bi-plus-circle"></i>
     </button>
   </div>
+
   <div class="px-3 py-2 flex-shrink-0 border-bottom">
     <input id="searchConvosInput" type="text" class="form-control" placeholder="Search messages..."/>
   </div>
-  <div id="conversationsList" class="flex-grow-1 overflow-auto p-0 pb-5"></div>
+
+  <div id="conversationsList" class="flex-grow-1 overflow-auto p-0 pb-5">
+    <% conversations.forEach(conv => { %>
+      <div class="conversation-card d-flex justify-content-between align-items-center p-3 mb-2 border-bottom"
+           data-id="<%= conv._id %>" data-title="<%= conv.title.toLowerCase() %>">
+        <img src="<%= conv.avatarUrl %>" alt="" class="rounded-circle me-2 flex-shrink-0" width="40" height="40">
+        <div class="flex-grow-1 me-2">
+          <strong>
+            <% if (conv.unread) { %>
+              <span class="unread-dot-inline"></span>
+            <% } %>
+            <%= conv.title %>
+          </strong><br>
+          <span class="text-truncate d-block"><%= conv.lastMsg %></span>
+        </div>
+        <div class="flex-shrink-0 text-nowrap text-muted small">
+          <%= conv.ts %>
+        </div>
+      </div>
+    <% }); %>
+  </div>
 
   <div id="newConvModal" style=" display: none;
       position: fixed;
@@ -56,7 +79,6 @@
       </div>
     </div>
   </div>
-
 
   <nav id="footerPlaceholder"></nav>
 

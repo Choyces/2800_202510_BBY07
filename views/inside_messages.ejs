@@ -20,8 +20,16 @@
 
 <body class="d-flex flex-column vh-100">
   <nav id="navbarPlaceholder"></nav>
-  <h5 id="conversationTitle" class="text-center py-3 flex-shrink-0">Person's name</h5>
-  <div id="messagesContainer" class="flex-grow-1 overflow-auto px-3 pb-5">
+<div id="conversationHeader" class="d-flex align-items-center px-3 py-2 border-bottom flex-shrink-0 mb-3">
+  <a href="/messages"
+     class="btn btn-link text-decoration-none p-0 me-3"
+     title="Back to all conversations">
+    <i class="bi bi-chevron-left fs-4"></i>
+  </a>
+  <div id="conversationTitle" class="d-flex flex-wrap align-items-center"></div>
+</div>
+
+  <div id="messagesContainer" class="flex-grow-1 overflow-auto px-3" style="padding-bottom: 150px;">
     <div id="messages" class="d-flex flex-column"></div>
   </div>
 
@@ -40,4 +48,5 @@
   <script src="/js/messages.js"></script>
   <script src="/js/skeleton.js"></script>
   <script src="/js/footer.js"></script>
+  <script src="/js/navbar.js"></script>
 </body>

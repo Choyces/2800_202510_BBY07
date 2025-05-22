@@ -103,10 +103,6 @@ app.get("/search", function (req, res) {
   let doc = fs.readFileSync("./text/search.html", "utf8");
   res.send(doc);
 });
-app.get("/messages", function (req, res) {
-  let doc = fs.readFileSync("./text/messages.html", "utf8");
-  res.send(doc);
-});
 app.get("/reel", function (req, res) {
   let doc = fs.readFileSync("./text/reel.html", "utf8");
   res.send(doc);
@@ -295,14 +291,6 @@ app.get("/profile", function (req, res) {
     let doc = fs.readFileSync("./text/profile.html", "utf8");
     res.send(doc);
 
-});
-
-app.get('/messages', (req, res) => {
-  res.sendFile(path.join(__dirname, 'text', 'messages.html'));
-});
-
-app.get('/inside_messages', (req, res) => {
-  res.sendFile(path.join(__dirname, 'text', 'inside_messages.html'));
 });
 
 app.get("/about", function (req, res) {

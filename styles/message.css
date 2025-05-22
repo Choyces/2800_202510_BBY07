@@ -1,6 +1,7 @@
 :root {
   --bs-primary: #8a2be2;
   --bs-primary-rgb: 138, 43, 226; 
+  --theme-gradient: linear-gradient(135deg, #ff69b4, #8a2be2);
 }
 
 .bg-primary,
@@ -17,7 +18,7 @@
   display: inline-block;
   max-width: 75vw;
   padding: 0.5rem;
-  background: var(--bs-primary);
+  background: var(--theme-gradient) !important;
   color:#fff;
   border-radius: 1rem;
   word-break: break-word;
@@ -103,4 +104,79 @@
 
 #messageInput {
   min-height: 1.5em;  
+}
+
+h1 {
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    font-weight: bold;
+    background: var(--theme-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#conversationHeader {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+
+#conversationHeader > a {
+  flex: 0 0 auto;
+}
+
+#conversationTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 0.5rem;
+}
+
+#conversationTitle a {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 1 auto;
+  min-width: 0;  
+}
+
+#conversationHeader img {
+  width: clamp(25px, 5vw, 45px);
+  height: clamp(25px, 5vw, 45px);
+  flex-shrink: 0;
+}
+
+#conversationHeader a span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 25ch;            
+}
+
+#sendButton {
+  background: var(--theme-gradient) !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+#newConvModal .d-flex.justify-content-between.align-items-center.mb-3 h5 {
+  background: var(--theme-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+#newConvModal #searchBtn {
+  background: var(--theme-gradient) !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+#conversationHeader > a > i.bi-chevron-left {
+  color: var(--bs-primary) !important;
 }
