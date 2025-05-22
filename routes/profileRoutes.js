@@ -61,7 +61,7 @@ router.get('/post/:id', async (req, res) => {
 
     const post = await postCollection.findOne({ _id: new ObjectId(req.params.id) });
     if (!post) return res.status(404).send('Post not found');
-    const currentUserId = req.session.user ? req.session.user._id : null;
+    const currentUserId = req.session.userId || null;
 
     res.render('postDetail', { post:post, currentUserId:currentUserId ? currentUserId.toString() : null  });  
   } catch (err) {
