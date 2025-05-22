@@ -24,6 +24,7 @@ const node_session_secret = process.env.NODE_SESSION_SECRET;
 const { client, db } = require('./databaseconnection'); 
 const userCollection = db.collection('users');
 const postsCollection = db.collection('posts');
+const { ObjectId } = require('mongodb');
 
 
 var mongoStore = MongoStore.create({
@@ -58,7 +59,7 @@ app.use("/css", express.static("./styles"));
 app.use("/img", express.static("./image"));
 app.use('/text', express.static(path.join(__dirname, 'text'))); 
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
-app.use('/', require('./routes/profileRoutes'));
+// app.use('/', require('./routes/profileRoutes'));
 
 app.set('view engine', 'ejs');
 
@@ -289,11 +290,41 @@ app.get('/logout', (req,res) => {
     res.send(html);
 });
 
+app.get('/messages', (req, res) => {
+  res.sendFile(path.join(__dirname, 'text', 'messages.html'));
+});
+
+app.get('/inside_messages', (req, res) => {
+  res.sendFile(path.join(__dirname, 'text', 'inside_messages.html'));
+});
+
 app.get("/profile", function (req, res) {
     let doc = fs.readFileSync("./text/profile.html", "utf8");
     res.send(doc);
-
 });
+
+app.get('/profile/data', async (req, res) => {
+  if (!req.session.authenticated) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+
+  try {
+    const user = await userCollection.findOne(
+      { _id: new ObjectId(req.session.userId) },
+      { projection: { name: 1, email: 1, username: 1 } }
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({ user });
+  } catch (err) {
+    console.error('Error fetching user data:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 
 app.get("/about", function (req, res) {
 
@@ -353,6 +384,6 @@ app.listen(port, function () {
 });
 
 app.use((req, res, next) => {
-  console.log(`Incoming request: ${req.method} ${req.url}`);
+  // console.log(`Incoming request: ${req.method} ${req.url}`);
   next();
 });

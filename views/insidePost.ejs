@@ -28,9 +28,9 @@
     <!-------------------------------------------->
     <!-- Other libraries and styles of your own -->
     <!-------------------------------------------->
-    <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/footer.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/insidePost.css">
 
    
 </head>
@@ -45,7 +45,12 @@
 
     <!-- Main Container -->
     <div class="container mt-4" id="postContainer" data-post-id="<%= postID %>">
-        <p class="text-muted" id="postAuthor"><%= authorUsername  %></p> 
+        <p id="postAuthor">
+          <a 
+            href="/<%= authorUsername %>" 
+            class="text-muted text-decoration-none"
+          ><%= authorUsername %></a>
+        </p>
          <h2 id="postTitle"><%= title  %></h2>
         <hr>
 
@@ -70,9 +75,10 @@
         <p class="text-muted" id="postDate"><%= createdAt  %></p>
         <button onclick="likePost()" id="likebutton" class="btn btn-outline-primary">Like this post</button>
        
-        <!-- If it is the authorthere will be an edit button -->
+        <!-- If it is the author there will be an edit button -->
         <% if (isAuthor) { %>
             <a href="/postEdit/<%= postID %>/edit" class="btn btn-primary">Edit</a>
+            <button class="btn btn-danger" onclick="deletePost('<%= postID %>')">Delete</button>
           <% } %>
 
         <!-- Comment Section -->
@@ -91,17 +97,19 @@
     </div>
     <div id="postError" class="alert alert-danger d-none"></div>
 
-    <div class="container mt-4" data-post-id="<%= postID %>">
+    <div id="commentFormContainer">
+      <div class="container mt-4" data-post-id="<%= postID %>">
         <div class="row justify-content-center">
           <div class="col-md-8">
-              <form id="commentForm" class="d-flex">
-                  <input type="text" id="commentInput" class="form-control me-2" 
-                         placeholder="Add a comment..." aria-label="Comment">
-                  <button onclick="addComment()" class="btn btn-outline-primary" type="submit">Submit</button>
-              </form> 
+            <form id="commentForm" class="d-flex">
+              <input type="text" id="commentInput" class="form-control me-2" placeholder="Add a comment…" aria-label="Comment"/>
+              <button id="submitCommentBtn" onclick="addComment()" type="submit">Submit</button>
+            </form>
           </div>
+        </div>
       </div>
     </div>
+
     <nav id="footerPlaceholder"></nav>
 
     <script src="/js/skeleton.js"></script>

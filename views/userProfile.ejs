@@ -13,7 +13,18 @@
 
     <!------------------------------------------>
     <!-- Bootstrap Library CSS JS CDN go here -->
+    <!------------------------------------------>
+    <!-- Bootstrap Library CSS JS CDN go here -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- MDB CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.0/mdb.min.css" rel="stylesheet" />
+
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+    <!-- MDB JS -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.0/mdb.min.js"></script>
+
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -31,6 +42,7 @@
     <!-------------------------------------------->
     <link rel="stylesheet" href="/css/profile.css">
     <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/navbar.css">
     
       
 
@@ -47,11 +59,12 @@
     <div class="row py-5 px-4">
       <div class="col-md-5 mx-auto">
           <div class="bg-white shadow rounded overflow-hidden">
-              <div class="px-4 pt-0 pb-4 cover">
-                  <div class="media align-items-end profile-head">
+              <div class="px-4 pt-0 pb-4 cover" >
+                  <div class="media align-items-end profile-head";>
                       <div class="profile mr-3">
-                          <img id="profileAvatar" src="<%= user.avatar || '/img/default-avatar.png' %>" width="130" class="rounded mb-2">
-                          <a href="/editProfile" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a>
+                          <img id="profileAvatar" src="<%= user.avatarUrl || '/img/default-avatar.png' %>" width="130" class="rounded mb-2">
+                          <a href="/editProfile" class="btn btn-outline-dark btn-sm btn-block" style="color:aliceblue;">Edit profile</a>
+                          <a href="/logout" class="btn btn-danger btn-sm btn-block mt-2">Logout</a>
                       </div>
                       <div class="media-body mb-5 text-white">
                           <h4 class="mt-0 mb-0"><%= user.name %></h4>
@@ -100,11 +113,10 @@
                   <button onclick="lookupWord()" class="btn btn-primary mb-3">Search</button>
                   <div id="definition" class="alert d-none"></div>
               </div>
-
               <div class="py-4 px-4">
                   <div class="d-flex align-items-center justify-content-between mb-3">
                       <h5 class="mb-0">Recent Posts</h5>
-                      <a href="#" class="btn btn-link text-muted">Show all</a>
+
                   </div>
                   <div class="row" id="postContainer">
                       <% posts.forEach(post => { %>
@@ -114,7 +126,7 @@
                                   <div class="card-body">
                                       <h5 class="card-title"><%= post.title %></h5>
                                       <p class="card-text"><%= post.text %></p>
-                                      <a href="/posts/<%= post._id %>" class="btn btn-primary">View</a>
+                                      <a href="/post/<%= post._id %>" class="btn btn-primary">View</a>
                                   </div>
                               </div>
                           </div>

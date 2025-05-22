@@ -224,3 +224,24 @@ document.addEventListener('DOMContentLoaded', () => {
   showLikebutton();
 });
 
+// delete function
+window.deletePost = async function(postId) {
+  try {
+    const res = await fetch(`/posts/${postId}`, {
+      method: 'DELETE',
+    });
+
+    if (res.ok) {
+      location.href = '/main';
+    } else {
+      const errorText = await res.text();
+      console.error('Failed to delete post:', errorText);
+      document.getElementById('postError').textContent = 'Failed to delete post';
+      document.getElementById('postError').classList.remove('d-none');
+    }
+  } catch (err) {
+    console.error('Error deleting post:', err);
+    document.getElementById('postError').textContent = 'Error deleting post';
+    document.getElementById('postError').classList.remove('d-none');
+  }
+}

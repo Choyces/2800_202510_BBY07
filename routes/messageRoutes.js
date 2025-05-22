@@ -213,7 +213,7 @@ router.get('/messages', async (req, res) => {
         lastMsg: conv.lastMessage || '—',
         ts,
         unread:  unreadMap[conv._id.toString()] || 0,
-        avatarUrl: conv.others[0].avatarUrl || '/img/default-avatar.png'
+        avatarUrl: conv.others[0]?.avatarUrl || '/img/default-avatar.png'
       };
     });
     res.render('messages', { conversations });
