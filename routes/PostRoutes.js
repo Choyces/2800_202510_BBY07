@@ -308,5 +308,38 @@ router.get('/:username/post/:postID', async (req, res) => {
       res.render("404");
     }
 });
+
+router.get('/api/posts/search', async (req, res) => {
+  const { q } = req.query;
+  if (!q) {
+    return res.json([]); 
+  }
+
+  try {
+    const postsArray = await posts.find({
+      title: { $regex: q, $options: 'i' } 
+    })
+    .project({ author: 1, title: 1, text: 1, photoUrl: 1, createdAt: 1 })
+    .toArray();
+    const authorIds = [...new Set(postsArray.map(post => post.author))];
+    const authors = await users.find({ _id: { $in: authorIds } })
+      .project({ username: 1 })
+      .toArray();
+    const authorMap = {};
+    authors.forEach(user => {
+      authorMap[user._id.toString()] = user.username;
+    });
+    const postData = postsArray.map(post => ({
+      ...post,
+      authorUsername: authorMap[post.author.toString()] || "Unknown"
+    }));
+
+    res.json(postData);
+  } catch (err) {
+    console.error("Search error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
   
 module.exports = router;

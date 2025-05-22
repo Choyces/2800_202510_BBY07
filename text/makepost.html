@@ -62,20 +62,19 @@
         </div>
 
         <button type="button" id="uploadBtn" class="btn btn-outline-primary">＋</button>
-        <input type="file" id="photo" name="photo" accept="image/*" style="display:none;">
+        <input type="file" id="photo" name="photo" accept="image/*,video/*" style="display:none;">
   
         <!-- Submit -->
         <button type="submit" class="btn btn-success">
           <i class="bi bi-upload"></i> Submit Post
         </button>
         <a href="/main" class="btn btn-secondary ms-2">Cancel</a>
-        <div class="mt-3">
+        <div class="mt-3" id="mediaPreviewContainer">
           <img
             id="photoPreview"
             src=""
             alt="Image preview"
-            style="display:none; max-width:100%; height:auto; border:1px solid #ccc; padding:4px;"
-          >
+            style="display:none; max-width:100%; height:auto; border:1px solid #ccc; padding:4px;">
         </div>
       </form>
     </div>
