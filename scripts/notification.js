@@ -17,10 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  markAllBtn.addEventListener('click', async () => {
-    e.preventDefault();
+  markAllBtn.addEventListener('click', async (e) => {
+    e.preventDefault(); 
     await fetch('/notifications/readAll', { method: 'POST' });
     document.querySelectorAll('.list-group-item.fw-bold')
-      .forEach(item => item.classList.replace('fw-bold','bg-light'));
+      .forEach(item => item.classList.replace('fw-bold', 'bg-light'));
   });
 });

@@ -30,9 +30,9 @@
     <div class="container mt-4">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h1>Notifications</h1>
-        <form action="/notifications/readAll" method="post">
-          <button id="markAllReadBtn" class="btn btn-secondary mt-3">Mark All as Read</button>
-        </form>
+          <button type="button" id="markAllReadBtn" class="btn btn-secondary mt-3">
+            Mark All as Read
+          </button>
       </div>
      
       <% if (notifications.length) { %>
