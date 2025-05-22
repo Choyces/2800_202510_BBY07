@@ -16,7 +16,7 @@
 
 /* Reserve top space to avoid content being hidden behind navbar */
 body {
-    padding-top: 70px; /* Adjust depending on actual navbar height */
+    padding-top: 50px; /* Adjust depending on actual navbar height */
 }
 
 .nav-icon {
