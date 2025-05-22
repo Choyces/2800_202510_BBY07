@@ -70,7 +70,7 @@
         <p class="text-muted" id="postDate"><%= createdAt  %></p>
         <button onclick="likePost()" id="likebutton" class="btn btn-outline-primary">Like this post</button>
        
-        <!-- If it is the authorthere will be an edit button -->
+        <!-- If it is the author there will be an edit button -->
         <% if (isAuthor) { %>
             <a href="/postEdit/<%= postID %>/edit" class="btn btn-primary">Edit</a>
             <button class="btn btn-danger" onclick="deletePost('<%= postID %>')">Delete</button>

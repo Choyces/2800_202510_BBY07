@@ -75,8 +75,8 @@ router.get('/profile', async (req, res) => {
 
   const userId = req.session.userId;
   try {
-    const user = await users.findOne({ _id: new ObjectId(userId) });
-    const userPosts = await posts.find({ author: new ObjectId(userId) }).toArray();
+    const user = await userCollection.findOne({ _id: new ObjectId(userId) });
+    const userPosts = await postCollection.find({ author: new ObjectId(userId) }).toArray();
 
     res.render('profile', { user, posts: userPosts });
   } catch (err) {
@@ -221,6 +221,4 @@ router.delete('/api/post/:id', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
-
-
 module.exports = router;

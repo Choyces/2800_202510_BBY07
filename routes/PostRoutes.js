@@ -340,6 +340,24 @@ router.get('/api/posts/search', async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+//delete route
+router.delete('/posts/:id', async (req, res) => {
+  const postId = req.params.id;
 
-  
+  if (!ObjectId.isValid(postId)) {
+    return res.status(400).send('Invalid post ID');
+  }
+
+  try {
+    const result = await posts.deleteOne({ _id: new ObjectId(postId) });
+    if (result.deletedCount === 0) {
+      return res.status(404).send('Post not found');
+    }
+    res.status(200).send('Post deleted');
+  } catch (err) {
+    console.error('Error deleting post:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 module.exports = router;
