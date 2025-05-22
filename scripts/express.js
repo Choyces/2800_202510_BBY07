@@ -1,28 +1,13 @@
-
-
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
-
 
   const btn = document.getElementById("click");
   btn.addEventListener("click", (event) => {
     event.preventDefault();  // Prevent default form submission (if you were using a form)
     const forumInput = document.getElementById("fname").value;  
     getBotResponse(forumInput, event);  
+    searchPostsByTitle(forumInput);
   });
 });
- 
-
-
-
-
-
-
-
 
 async function getBotResponse(userMessage, event) {
   event.preventDefault()
@@ -63,3 +48,43 @@ document.getElementById("messages").textContent = botMessage;
     );
   }
 }
+
+
+async function searchPostsByTitle(query) {
+  const resultsDiv = document.getElementById("post-search-results");
+  const cardTemplate = document.getElementById("postCardTemplate");
+  resultsDiv.innerHTML = "";
+  if (!query) {
+    resultsDiv.innerHTML = "<p class='placeholder-text'>Please enter a search term.</p>";
+    return;
+  }
+  try {
+    const res = await fetch(`/api/posts/search?q=${encodeURIComponent(query)}`);
+    const posts = await res.json();
+
+    if (!posts.length) {
+      resultsDiv.innerHTML = "<p class='placeholder-text'>No posts found for that slang.</p>";
+      return;
+    }
+
+    posts.forEach(post => {
+      const newCard = createCardElement(cardTemplate, post);
+      resultsDiv.appendChild(newCard);
+    });
+  } catch (err) {
+    resultsDiv.innerHTML = "<p class='placeholder-text'>Error searching posts.</p>";
+    console.error(err);
+  }
+}
+
+function createCardElement(cardTemplate, post) {
+  const newCard = cardTemplate.content.cloneNode(true);
+  newCard.querySelector('.card-title').innerText = post.title || "No Title";
+  newCard.querySelector('.card-text').innerText = post.text || "No Content";
+  newCard.querySelector('.card-author').innerText = post.authorUsername || "Unknown Author";
+  newCard.querySelector('.card-author').setAttribute("href", `${post.authorUsername}`);
+  newCard.querySelector('.card-date').innerText = post.createdAt.slice(0, 10) || "Unknown Date";
+  newCard.querySelector('.read-more-btn').setAttribute("href", `${post.authorUsername}/post/${post._id}`);
+  return newCard;
+}
+

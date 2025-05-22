@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="/css/test.css">
     <link rel="stylesheet" href="/css/footer.css">
     <link rel="stylesheet" href="/css/navbar.css">
-
 </head>
 <body>
   <nav id="navbarPlaceholder"></nav>
@@ -28,6 +27,21 @@
                 <span class="flame-icon">🔥</span>
             </h2>
         </div>
+
+        <template id="postCardTemplate">
+          <div class="col-md-4 col-sm-6">
+              <div class="card h-100 shadow-sm post-card">
+                  <div class="card-body d-flex flex-column">
+                      <h5 class="card-title fw-bold text-primary"></h5>
+                      <p class="card-text text-muted flex-grow-1"></p>
+                      <a class="card-author mb-1 text-dark small fw-semibold"></a>
+                      <p href="" class="card-date mb-2 text-secondary small"></p>
+                      <a href="#" class="read-more-btn"><span class="gradient-text">Read More</span></a>
+                  </div>
+              </div>
+          </div>
+        </template>
+
         
         <div class="results-section">
             <div id="result-content">
@@ -37,6 +51,7 @@
                 <div id="messages">
                     <p class="placeholder-text">Hunt for a slang term to see its definition here...</p>
                 </div>
+                <div id="post-search-results" class="row g-4 justify-content-center"></div>
             </div>
             <div class="loading" id="loading">
                 <span></span>
