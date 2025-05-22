@@ -126,6 +126,39 @@ async function likePost() {
   }
 }
 
+//follow functiopn
+
+async function follow() {
+  const el = document.querySelector('.userContainer');
+  let followId = el.id;
+  const followButton = document.getElementById('followButton');
+
+  try {
+    const res = await fetch(`/follow/${followId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+      if (result.liked) {
+        followButton.innerText = "Folllowed";
+        followButton.classList.add('btn-primary');
+        followButton.classList.remove('btn-outline-primary');
+      } else {
+        followButton.innerText = "Follow";
+        followButton.classList.add('btn-outline-primary');
+        followButton.classList.remove('btn-primary');
+      }
+    }
+  } catch (err) {
+    console.error("Error processing like/unlike:", err);
+  }
+}
+
 async function addComment() {
   const commentText = document.getElementById('commentInput').value;
   const postID = document.querySelector('#postContainer').getAttribute('data-post-id');

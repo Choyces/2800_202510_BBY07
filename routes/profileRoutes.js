@@ -57,18 +57,16 @@ router.get('/following', (req, res) => {
 router.post('/follow/:targetUserId', async (req, res) => {
   const currentUserId = req.session.userId;
   const { targetUserId } = req.params;
-
   if (!currentUserId) {
     return res.status(401).json({ error: 'Please log in first' });
   }
-
   if (currentUserId === targetUserId) {
     return res.status(400).json({ error: "You can't follow yourself" });
   }
 
   try {
-    const currentUser = await users.findOne({ _id: new ObjectId(currentUserId) });
-    const targetUser = await users.findOne({ _id: new ObjectId(targetUserId) });
+    const currentUser = await userCollection.findOne({ _id: new ObjectId(currentUserId) });
+    const targetUser = await userCollection.findOne({ _id: new ObjectId(targetUserId) });
 
     if (!currentUser || !targetUser) {
       return res.status(404).json({ error: 'User not found' });
@@ -77,33 +75,33 @@ router.post('/follow/:targetUserId', async (req, res) => {
     const currentFollowing = currentUser.following || [];
     const targetFollowers = targetUser.followers || [];
 
+
     const alreadyFollowing = currentFollowing.some(id => id.toString() === targetUserId);
 
     if (alreadyFollowing) {
-      // Unfollow logic
       const updatedFollowing = currentFollowing.filter(id => id.toString() !== targetUserId);
       const updatedFollowers = targetFollowers.filter(id => id.toString() !== currentUserId);
 
-      await users.updateOne(
+
+      await userCollection.updateOne(
         { _id: new ObjectId(currentUserId) },
         { $set: { following: updatedFollowing } }
       );
-      await users.updateOne(
+      await userCollection.updateOne(
         { _id: new ObjectId(targetUserId) },
         { $set: { followers: updatedFollowers } }
       );
 
       return res.json({ success: true, following: false });
     } else {
-      // Follow logic
       currentFollowing.push(new ObjectId(targetUserId));
       targetFollowers.push(new ObjectId(currentUserId));
 
-      await users.updateOne(
+      await userCollection.updateOne(
         { _id: new ObjectId(currentUserId) },
         { $set: { following: currentFollowing } }
       );
-      await users.updateOne(
+      await userCollection.updateOne(
         { _id: new ObjectId(targetUserId) },
         { $set: { followers: targetFollowers } }
       );
@@ -115,6 +113,7 @@ router.post('/follow/:targetUserId', async (req, res) => {
     return res.status(500).json({ error: 'Server error' });
   }
 });
+
 
 // GET /post/:id (Serve post detail page)
 router.get('/yourposts/:id', async (req, res) => {
