@@ -1,30 +1,23 @@
-window.onload = async () => {
-    const postId = window.location.pathname.split('/')[2];
-    const res = await fetch(`/api/post/${postId}`);
-    const post = await res.json();
+
+async function deletePost(postId) {
+    if (!confirm("Are you sure you want to delete this post?")) return;
   
-    document.getElementById('title').value = post.title;
-    document.getElementById('text').value = post.text;
-  
-    document.getElementById('editForm').onsubmit = async (e) => {
-      e.preventDefault();
-      const updated = {
-        title: document.getElementById('title').value,
-        text: document.getElementById('text').value,
-      };
-  
+    try {
       const res = await fetch(`/api/post/${postId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updated),
+        method: 'DELETE',
       });
   
       if (res.ok) {
-        alert('Updated!');
-        window.location.href = `/yourposts/${postId}`;
+        alert('Post deleted!');
+        window.location.href = '/userProfile'; // Redirect after delete
       } else {
-        alert('Failed to update');
+        const error = await res.text();
+        alert(`Failed to delete post: ${error}`);
       }
-    };
-  };
+    } catch (err) {
+      console.error('Error deleting post:', err);
+      alert('Something went wrong');
+    }
+  }
+  
   

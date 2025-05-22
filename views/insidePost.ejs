@@ -67,6 +67,7 @@
         <!-- If it is the authorthere will be an edit button -->
         <% if (isAuthor) { %>
             <a href="/postEdit/<%= postID %>/edit" class="btn btn-primary">Edit</a>
+            <button class="btn btn-danger" onclick="deletePost('<%= postID %>')">Delete</button>
           <% } %>
 
         <!-- Comment Section -->
@@ -104,6 +105,7 @@
     <!---------------------------------------------->
     <script src="/js/skeleton.js"></script>
     <script src="/js/main.js"></script>
-    <script src="/js/footer.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/postEdit.js"></script>
 </body>
 </html>

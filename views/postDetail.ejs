@@ -1,0 +1,77 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>My BCIT Project</title>
+    <meta name="comp2800 template" content="My 2800 App">
+
+    <!------------------------>
+    <!-- Required meta tags -->
+    <!------------------------>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!------------------------------------------>
+    <!-- Bootstrap Library CSS JS CDN go here -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+   
+    <!------------------------------------------>
+
+
+    <!-------------------------------------------------------->
+    <!-- Firebase 8 Library related CSS, JS, JQuery go here -->
+    <!-------------------------------------------------------->
+
+    <!-------------------------------------------->
+    <!-- Other libraries and styles of your own -->
+    <!-------------------------------------------->
+    <!-- <link rel="stylesheet" href="/css/profile.css"> -->
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    
+      
+
+</head>
+
+<body>
+    <!------------------------------>
+    <!-- Your HTML Layout go here -->
+    <!------------------------------>
+
+    <!-- navbar -->
+    <nav id="navbarPlaceholder"></nav>
+   
+
+    <!-- the body of your page goes here -->
+    <div class="container mt-5" id="postDetail">
+        <div class="card shadow rounded">
+          <% if (post.photoUrl) { %>
+            <img src="<%= post.photoUrl %>" class="card-img-top" alt="<%= post.title %>" style="height: 250px; object-fit: cover;" />
+          <% } %>
+          <div class="card-body">
+            <h4 class="card-title"><%= post.title %></h4>
+            <p class="card-text"><%= post.text %></p>
+            <!-- <button onclick="editPost('<%= post._id %>')" class="btn btn-warning">Edit</button>
+            <button onclick="deletePost('<%= post._id %>')" class="btn btn-danger">Delete</button> -->
+          </div>
+        </div>
+      </div>
+  
+    <!-- our own footer goes here -->
+    <nav id="footerPlaceholder"></nav>
+    <!-- ------------------------------------------
+    Your own JavaScript functions go here   
+    <!---------------------------------------------->
+    <script src="/js/profile.js"></script> 
+    <script src="/js/skeleton.js"></script>
+    <script src="/js/footer.js"></script>
+
+</body>
+</html> 
+
