@@ -6,12 +6,17 @@
     background-color: #d6f7d9; /* Match the green background */
     padding: 12px 20px;
     border-bottom: 2px solid #b8e2bb; /* Match footer border */
-    position: sticky;
+    position: fixed;
     top: 0;
     width: 100%;
     z-index: 1000;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     font-family: 'Arial', sans-serif;
+}
+
+/* Reserve top space to avoid content being hidden behind navbar */
+body {
+    padding-top: 70px; /* Adjust depending on actual navbar height */
 }
 
 .nav-icon {
@@ -30,11 +35,11 @@
 }
 
 .nav-icon.active svg {
-    stroke: #b8e2bb; /* Slightly lighter for active state */
+    stroke: #b8e2bb;
 }
 
 .nav-icon:hover svg {
-    stroke: #b8e2bb; /* Slightly lighter for hover effect */
+    stroke: #b8e2bb;
     transform: scale(1.1);
 }
 
@@ -52,7 +57,7 @@
 }
 
 .notification-badge {
-    background-color: #ec35f7; /* Match the pink text */
+    background-color: #ec35f7;
     color: white;
     font-size: 10px;
     font-weight: bold;
@@ -62,4 +67,41 @@
     top: -5px;
     right: 2px;
     transform: scale(0.8);
+}
+
+/* Responsive scaling */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px 15px;
+    }
+
+    .nav-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .notification-badge {
+        font-size: 8px;
+        padding: 2px 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 8px 10px;
+    }
+
+    .nav-icon {
+        padding: 0 10px;
+    }
+
+    .nav-icon svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .notification-badge {
+        font-size: 7px;
+        padding: 1px 3px;
+    }
 }
