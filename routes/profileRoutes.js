@@ -85,6 +85,30 @@ router.get('/profile', async (req, res) => {
   }
 });
 
+//get username
+// router.get('/profile/data', async (req, res) => {
+//   if (!req.session.authenticated) {
+//     return res.status(401).json({ error: 'Not authenticated' });
+//   }
+
+//   try {
+//     const user = await userCollection.findOne(
+//       { _id: new ObjectId(req.session.userId) },
+//       { projection: { name: 1, email: 1 } } 
+//     );
+
+//     if (!user) {
+//       return res.status(404).json({ error: 'User not found' });
+//     }
+
+//     res.json({ user });
+//   } catch (err) {
+//     console.error('Error fetching user data:', err);
+//     res.status(500).json({ error: 'Server error' });
+//   }
+// });
+
+
 // POST /profile/update (Update profile info)
 router.post('/profile/update', async (req, res) => {
   if (!req.session.authenticated) {
