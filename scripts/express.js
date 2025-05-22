@@ -22,7 +22,7 @@ async function getBotResponse(userMessage, event) {
       body: JSON.stringify({
         contents: [
           {
-            parts: [{ text: `Provide a small definition for the word like urban dictionary: ${userMessage}` }],  // Asking for definition
+            parts: [{ text: `Provide a small definition for the word like urban dictionary: ${userMessage}` }],  
           },
         ],
       }),

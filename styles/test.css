@@ -104,3 +104,98 @@
     margin-top: 2rem;
     font-style: italic;
 }
+
+.read-more-btn {
+    position: relative;
+    display: inline-block;
+    padding: 0.48rem 1.25rem;
+    font-weight: 600;
+    font-size: 1.01rem;
+    margin-top: 1rem;
+    border: none;
+    border-radius: 999px;
+    background: #fff;
+    transition: all 0.17s;
+    cursor: pointer;
+    text-decoration: none;
+    align-self: flex-start;
+    box-shadow: 0 1.5px 8px rgba(138, 43, 226, 0.11);
+    z-index: 1;
+    overflow: hidden;
+}
+
+
+.read-more-btn::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: 999px;
+    padding: 2px; 
+    background: linear-gradient(135deg, #ff69b4, #8a2be2);
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    mask:
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+
+.read-more-btn {
+    background-clip: padding-box;
+}
+
+
+.read-more-btn .gradient-text {
+    background: linear-gradient(135deg, #ff69b4, #8a2be2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+}
+
+
+.read-more-btn:hover {
+    background: linear-gradient(135deg, #ff69b4, #8a2be2);
+}
+.read-more-btn:hover .gradient-text {
+    -webkit-background-clip: initial;
+    -webkit-text-fill-color: #fff;
+    background-clip: initial;
+    color: #fff;
+}
+
+.card-title {
+    background: linear-gradient(135deg, #ff69b4, #8a2be2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.17rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.card-author {
+    background: linear-gradient(135deg, #ff69b4, #8a2be2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.post-card {
+    border-radius: 20px;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+    border: 1px solid #f0f0f0;
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
