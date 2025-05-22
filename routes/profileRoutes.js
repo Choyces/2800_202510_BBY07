@@ -24,7 +24,7 @@ router.get('/userProfile', async (req, res) => {
   try {
     const user = await userCollection.findOne(
       { _id: new ObjectId(req.session.userId) },
-      { projection: { name: 1, email: 1, location: 1, bio: 1, avatarUrl: 1 } }
+      { projection: { name: 1, email: 1, location: 1, bio: 1, avatarUrl: 1, username: 1 } }
     );
 
     if (!user) {

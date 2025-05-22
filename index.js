@@ -371,7 +371,7 @@ app.get('/:username', async (req, res) => {
 
     // If it's your own profile
     if (username === req.session.username) {
-      return res.render("userProfile", { user, posts});
+      return res.render("userProfile", {user, posts});
     }
 
     // Someone else's profile
