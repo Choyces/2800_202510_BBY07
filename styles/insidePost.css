@@ -1,0 +1,152 @@
+/* insidePost.css */
+
+/* 1) Footer height – match your real footer */
+:root {
+  --footer-height: 68px;
+}
+
+body {
+  /* adjust 50px up or down to control how much more you can scroll */
+  padding-bottom: 70px;
+}
+
+/* 2) All your “main.css” styles for the post page */
+.container {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+
+#postTitle {
+  font-size: 2rem !important; 
+  font-weight: bold;
+  background: linear-gradient(135deg, #ff69b4, #8a2be2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+#postAuthor,
+#postDate {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 1rem;
+}
+
+hr {
+  border-top: 2px solid #f0f0f0;
+  margin: 20px 0;
+}
+
+#postContent {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #333;
+}
+
+h4 {
+  font-size: 1.5rem;
+  color: #2a4d8f;
+  margin-bottom: 1rem;
+}
+
+#commentsContainer p {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* 3) Pin the whole form container above the footer */
+#commentFormContainer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--footer-height);
+  background: #fff;
+  padding: 8px 4px;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+/* keep inner width sane */
+#commentFormContainer .container {
+  max-width: 720px;
+}
+
+/* 4) Input styling */
+#commentFormContainer #commentInput {
+  border-radius: 25px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  transition: box-shadow 0.3s;
+  flex: 1;
+}
+
+#commentFormContainer #commentInput:focus {
+  box-shadow: linear-gradient(135deg, #ff69b4, #8a2be2);
+  border-color: linear-gradient(135deg, #ff69b4, #8a2be2);
+}
+
+/* 5) Your gradient‐rounded submit button */
+#submitCommentBtn {
+  border-radius: 25px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #ff69b4, #8a2be2);
+  color: white;
+  font-weight: bold;
+  border: none;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+#submitCommentBtn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #ff85c1, #9d5cf1);
+}
+
+#commentFormContainer > .container {
+  background: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  max-width: 720px;
+  box-shadow: none !important;
+}
+
+#commentFormContainer .mt-4 {
+  margin-top: 0 !important;
+}
+
+/* optional: if your row/cols are adding unwanted gutters */
+#commentFormContainer .row {
+  margin: 0 !important;
+}
+#commentFormContainer .col-md-8 {
+  padding: 0 !important;
+}
+
+#postAuthor a {
+  background: none !important;       
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: initial !important;
+  color: #007bff !important;              
+  text-decoration: underline !important; 
+  font-weight: bold !important;  
+  font-size: 1rem;
+}
+
+/* 6) Responsive tweaks */
+@media (max-width: 768px) {
+  #postTitle {
+    font-size: 1.5rem;
+  }
+  #postContent {
+    font-size: 1rem;
+  }
+  #commentFormContainer #commentInput,
+  #submitCommentBtn {
+    font-size: 0.9rem;
+  }
+}
