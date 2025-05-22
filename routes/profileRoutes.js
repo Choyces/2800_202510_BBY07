@@ -49,6 +49,21 @@ router.get('/following', (req, res) => {
   res.send(readHTML('following.html'));
 });
 //get post
+// router.get('/post/:id', async (req, res) => {
+//   try {
+//     if (!ObjectId.isValid(req.params.id)) {
+//       return res.status(400).send('Invalid ID');
+//     }
+
+//     const post = await postCollection.findOne({ _id: new ObjectId(req.params.id) });
+//     if (!post) return res.status(404).send('Post not found');
+
+//     res.render('postDetail', { post });  
+//   } catch (err) {
+//     console.error('Error rendering post:', err);
+//     res.status(500).send('Server error');
+//   }
+// });
 router.get('/post/:id', async (req, res) => {
   try {
     if (!ObjectId.isValid(req.params.id)) {
@@ -58,12 +73,15 @@ router.get('/post/:id', async (req, res) => {
     const post = await postCollection.findOne({ _id: new ObjectId(req.params.id) });
     if (!post) return res.status(404).send('Post not found');
 
-    res.render('postDetail', { post });  
+    const currentUserId = req.session.userId; 
+
+    res.render('postDetail', { post, currentUserId });  
   } catch (err) {
     console.error('Error rendering post:', err);
     res.status(500).send('Server error');
   }
 });
+
 
 router.get('/profile', async (req, res) => {
   if (!req.session.authenticated) return res.redirect('/login');
