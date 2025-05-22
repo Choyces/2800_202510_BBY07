@@ -3,24 +3,31 @@ a {
     text-decoration: none;
 }
 
+body {
+    background: #654ea3;
+    background: linear-gradient(to right, #e96443, #904e95);
+    min-height: 100vh;
+    overflow-x: hidden;
+    margin: 0;
+}
+
+/* Offset content below the sticky navbar */
+main, .content, .profile-head-container {
+    padding-top: 80px; /* Adjust to match navbar height */
+}
+
 .profile-head {
-    transform: translateY(5rem)
+    /* Replacing transform with margin for proper flow */
+    margin-top: 3rem;
 }
 
 .cover {
     background-image: url(https://images.unsplash.com/photo-1530305408560-82d13781b33a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1352&q=80);
     background-size: cover;
-    background-repeat: no-repeat
+    background-repeat: no-repeat;
 }
 
-body {
-    background: #654ea3;
-    background: linear-gradient(to right, #e96443, #904e95);
-    min-height: 100vh;
-    overflow-x:hidden;
-}
-
-/* Container for the dictionary section */
+/* Dictionary Section */
 #dictionary-section {
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
@@ -29,7 +36,7 @@ body {
     margin-top: 20px;
 }
 
-/* Input field styling */
+/* Input Styling */
 #wordInput {
     border: 1px solid #ced4da;
     padding: 10px;
@@ -37,7 +44,7 @@ body {
     border-radius: 5px;
 }
 
-/* Style for the search button */
+/* Button Styling */
 #dictionary-section .btn-primary {
     background-color: #0056b3;
     border: none;
@@ -46,12 +53,11 @@ body {
     border-radius: 5px;
 }
 
-/* Hover effect for the search button */
 #dictionary-section .btn-primary:hover {
     background-color: #003d80;
 }
 
-/* Style for the definition display box */
+/* Definition Display */
 #definition {
     margin-top: 15px;
     font-size: 16px;
@@ -62,28 +68,28 @@ body {
     padding: 10px;
 }
 
+/* Card Styling */
 .card {
     border: 1px solid #ddd;
     border-radius: 12px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .card:hover {
+}
+
+.card:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  }
-  
-  .card-title {
+}
+
+.card-title {
     font-size: 1.2rem;
-  }
-  
-  .card-text {
+}
+
+.card-text {
     font-size: 0.95rem;
     line-height: 1.4;
-  }
-  
-  .card-img-top {
+}
+
+.card-img-top {
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
-  }
-  
+}
