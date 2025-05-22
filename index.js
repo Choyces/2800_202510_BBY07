@@ -95,8 +95,8 @@ app.get("/test", function (req, res) {
   let doc = fs.readFileSync("./text/test.html", "utf8");
   res.send(doc);
 });
-app.get("/help", function (req, res) {
-  let doc = fs.readFileSync("./text/help.html", "utf8");
+app.get("/game", function (req, res) {
+  let doc = fs.readFileSync("./text/game.html", "utf8");
   res.send(doc);
 });
 
