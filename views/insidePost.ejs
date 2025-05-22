@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Main Page</title>
+    <title>Inside Post</title>
     <meta name="comp1800 template" content="My 1800 App">
     <!------------------------>
     <!-- Required meta tags -->
@@ -56,9 +56,15 @@
 
 
         <!-- Image display IF post has image -->
-        <% if (photoUrl) { %>
+        <% if (photoUrl) { 
+            const isVideo = photoUrl.match(/\.(mp4|webm|ogg)$/i);
+        %>
             <div class="mb-3">
-                <img id="postImage" src="<%= photoUrl %>" alt="Post Image" class="img-fluid">
+                <% if (isVideo) { %>
+                    <video id="postVideo" src="<%= photoUrl %>" class="img-fluid" style="width:100%;max-height:350px;object-fit:cover;" controls></video>
+                <% } else { %>
+                    <img id="postImage" src="<%= photoUrl %>" alt="Post Media" class="img-fluid" style="width:100%;max-height:350px;object-fit:cover;">
+                <% } %>
             </div>
         <% } %>
         <p class="text-muted" id="postDate"><%= createdAt  %></p>
@@ -97,15 +103,11 @@
           </div>
       </div>
     </div>
-    <!-- footer goes here-->
     <nav id="footerPlaceholder"></nav>
 
-    <!---------------------------------------------->
-    <!-- Your own JavaScript functions go here    -->
-    <!---------------------------------------------->
     <script src="/js/skeleton.js"></script>
     <script src="/js/main.js"></script>
-    <script src="/js/main.js"></script>
-    <script src="/js/postEdit.js"></script>
+    <script src="/js/footer.js"></script>
+    <script src="/js/navbar.js"></script>
 </body>
 </html>

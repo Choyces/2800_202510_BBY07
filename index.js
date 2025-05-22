@@ -47,6 +47,10 @@ app.use(session({
  saveUninitialized: true
 }));
 
+// serve *everything* in your project root at the web root
+app.use(express.static(__dirname));
+
+
 // just like a simple web server like Apache web server
 // we are mapping file system paths to the app's virtual paths
 app.use("/js", express.static("./scripts"));
@@ -101,14 +105,6 @@ app.get("/search", function (req, res) {
   let doc = fs.readFileSync("./text/search.html", "utf8");
   res.send(doc);
 });
-app.get("/notification", function (req, res) {
-  let doc = fs.readFileSync("./text/notification.html", "utf8");
-  res.send(doc);
-});
-app.get("/messages", function (req, res) {
-  let doc = fs.readFileSync("./text/messages.html", "utf8");
-  res.send(doc);
-});
 app.get("/reel", function (req, res) {
   let doc = fs.readFileSync("./text/reel.html", "utf8");
   res.send(doc);
@@ -157,7 +153,7 @@ app.post('/submitUser', async (req,res) => {
         dob:      dob ? new Date(dob) : undefined,
         location: location || '',
         bio:       '',
-        avatarUrl: '',
+        avatarUrl: '/image/default-avatar.png',
         privacySettings: {
           notificationsEnabled: true,
           profilePublic:        true
@@ -299,6 +295,11 @@ app.get('/messages', (req, res) => {
 
 app.get('/inside_messages', (req, res) => {
   res.sendFile(path.join(__dirname, 'text', 'inside_messages.html'));
+});
+
+app.get("/profile", function (req, res) {
+    let doc = fs.readFileSync("./text/profile.html", "utf8");
+    res.send(doc);
 });
 
 app.get("/about", function (req, res) {

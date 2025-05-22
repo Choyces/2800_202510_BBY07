@@ -1,114 +1,3 @@
-// // Initializes authentication state monitoring and user name retrieval
-// function getNameFromAuth() {
-//   firebase.auth().onAuthStateChanged(handleAuthStateChange);
-// }
-
-// // Handles authentication state changes and updates UI with user name
-// function handleAuthStateChange(user) {
-//   if (user) {
-//     console.log(user.uid, user.displayName);
-//     updateUserNameDisplay(user.displayName);
-//   } else {
-//     console.log("No user is logged in");
-//   }
-// }
-
-// // Updates DOM element with current user's display name
-// function updateUserNameDisplay(userName) {
-//   const nameElement = document.getElementById("name-goes-here");
-//   if (nameElement) nameElement.innerText = userName;
-// }
-
-// // // Retrieves all post documents from Firestore collection
-// // async function fetchPosts() {
-// //   try {
-// //     const snapshot = await db.collection("posts").get();
-// //     return snapshot.docs.map(doc => ({ id: doc.id, data: doc.data() }));
-// //   } catch (error) {
-// //     console.error("Error fetching posts: ", error);
-// //     return [];
-// //   }
-// // }
-
-// // Selects random subset of posts from array
-// function selectRandomPosts(postsArray, count = 3) {
-//   return postsArray.sort(() => 0.5 - Math.random()).slice(0, count);
-// }
-
-// // Retrieves author name from Firestore using user ID with fallback handling
-// async function getPostAuthor(userId) {
-//   try {
-//     const userDoc = await db.collection("users").doc(userId).get();
-//     return userDoc.exists ? userDoc.data().name || "Unknown User" : "Anonymous";
-//   } catch (err) {
-//     console.warn(`Failed to fetch user ${userId}: `, err);
-//     return "Anonymous";
-//   }
-// }
-
-// // Creates cloned card element from template populated with post data
-// function createCardElement(cardTemplate, post, author, date) {
-//   const newCard = cardTemplate.content.cloneNode(true);
-//   newCard.querySelector('.card-title').innerText = post.data.title || "No Title";
-//   newCard.querySelector('.card-text').innerText = post.data.content || "No Content";
-//   newCard.querySelector('.card-author').innerText = `By: ${author}`;
-//   newCard.querySelector('.card-date').innerText = `Posted on: ${date}`;
-  
-//   const readMoreBtn = newCard.querySelector('.read-more-btn');
-//   readMoreBtn?.setAttribute('href', `inside_post.html?postId=${post.id}`);
-//   return newCard;
-// }
-
-// // Processes individual post to create complete card element with metadata
-// async function processSinglePost(post, cardTemplate) {
-//   const postDate = post.data.timestamp?.toDate().toLocaleString() || "No Date";
-//   const author = await getPostAuthor(post.data.owner);
-//   return createCardElement(cardTemplate, post, author, postDate);
-// }
-
-// // Main display function that fetches, selects, and renders post cards
-// // async function displayPosts() {
-// //   const cardTemplate = document.getElementById("postCardTemplate");
-// //   const container = document.getElementById("posts-go-here");
-// //   if (!cardTemplate || !container) return;
-
-// //   container.innerHTML = ""; 
-
-// //   try {
-// //     const postsArray = await fetchPosts();
-// //     const selectedPosts = selectRandomPosts(postsArray);
-    
-// //     for (const post of selectedPosts) {
-// //       const newCard = await processSinglePost(post, cardTemplate);
-// //       container.appendChild(newCard);
-// //     }
-// //   } catch (error) {
-// //     console.error("Error displaying posts: ", error);
-// //   }
-// // }
-
-// // Sets up search form event listener for submission handling
-// function setupSearchForm() {
-//   const searchForm = document.getElementById('searchForm');
-//   searchForm?.addEventListener('submit', handleSearchSubmit);
-// }
-
-// // Handles search form submission with validation and search term encoding
-// async function handleSearchSubmit(e) {
-//   e.preventDefault();
-//   const searchInput = document.getElementById('searchInput');
-//   const searchTermRaw = searchInput.value.trim();
-
-//   if (!searchTermRaw) {
-//     alert("Please enter a search term");
-//     return;
-//   }
-
-//   const searchTerm = encodeURIComponent(searchTermRaw.toLowerCase());
-//   window.location.href = `public_post.html?search=${searchTerm}`;
-// }
-
-//new mongo post stuff.......... keeping old firebase stuff for reference^^^^^^^^^^^^
 
 //Gets all posts from the database
 async function getPosts() {
@@ -249,3 +138,75 @@ async function addComment() {
 document.addEventListener('DOMContentLoaded', () => {
   displayPosts();
 });
+
+// Fetch and display the current user's username in the greeting
+async function displayUsername() {
+  try {
+    const res = await fetch('/profile/data'); // changed endpoint
+    if (!res.ok) throw new Error("Failed to fetch profile data");
+
+    const data = await res.json();
+    if (!data.user || !data.user.name) throw new Error("User data not found");
+
+    const nameSpan = document.getElementById("name-goes-here");
+    if (nameSpan) {
+      nameSpan.innerText = data.user.name;
+    }
+  } catch (err) {
+    console.error("Error displaying username:", err);
+    const fallback = document.getElementById("name-goes-here");
+    if (fallback) fallback.innerText = "Guest";
+  }
+}
+
+// // Fetch and display only posts from followed users
+// async function displayFollowedPosts() {
+//   const cardTemplate = document.getElementById("postCardTemplate");
+//   const container = document.getElementById("posts-go-here");
+//   if (!cardTemplate || !container) return;
+//   container.innerHTML = "";
+
+//   try {
+//     const res = await fetch("/post/following"); // Backend should return followed users' posts
+//     if (!res.ok) throw new Error("Failed to fetch followed posts");
+//     const postsArray = await res.json();
+
+//     if (postsArray.length === 0) {
+//       container.innerHTML = `<p class="text-muted text-center">No posts from people you follow.</p>`;
+//       return;
+//     }
+
+//     for (const post of postsArray) {
+//       const newCard = await processSinglePost(post, cardTemplate);
+//       container.appendChild(newCard);
+//     }
+//   } catch (err) {
+//     console.error("Error displaying followed posts:", err);
+//   }
+// }
+
+// Handle filter button clicks
+function setupFilterButtons() {
+  const exploreBtn = document.getElementById("btn-explore");
+  const followBtn = document.getElementById("btn-follow");
+
+  if (exploreBtn) {
+    exploreBtn.addEventListener("click", () => {
+      location.reload(); // reload to show random/explore posts
+    });
+  }
+
+  if (followBtn) {
+    followBtn.addEventListener("click", () => {
+      location.reload(); // reload to show random/explore posts
+    });
+  }
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  displayPosts();
+  displayUsername();
+  setupFilterButtons(); 
+});
+

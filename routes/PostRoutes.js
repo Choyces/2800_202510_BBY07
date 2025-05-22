@@ -150,6 +150,19 @@ router.post('/like/:postID', async (req, res) => {
         { $inc: { "stats.likes": 1 } }
       );
 
+      // Create Like notification
+      const postDoc = await posts.findOne({ _id: new ObjectId(postId) });
+      await db.collection('notifications').insertOne({
+        recipient:   postDoc.author,          
+        sender:      new ObjectId(userId),    
+        senderUsername: req.session.username,
+        postId:      new ObjectId(postId),
+        postTitle:   postDoc.title,
+        type:        'like',
+        read:        false,
+        createdAt:   new Date()
+      });
+
       return res.json({ success: true });
     } catch (err) {
       console.error("Error liking post:", err);
@@ -202,6 +215,20 @@ router.post('/createComment/:postID', async (req, res) => {
       { _id: new ObjectId(postId) },
       { $push: { comments: commentData } }
     );
+
+    // Create comment notification
+    const postDoc = await posts.findOne({ _id: new ObjectId(postId) });
+    await db.collection('notifications').insertOne({
+      recipient: postDoc.author,
+      sender: new ObjectId(userId),
+      senderUsername: req.session.username,
+      postId: new ObjectId(postId),
+      postTitle: postDoc.title,
+      commentText: commentData.text,
+      type: 'comment',
+      read: false,
+      createdAt: new Date()
+    });
 
     console.log("commentData", commentData);
     console.log("comment added");
@@ -281,5 +308,38 @@ router.get('/:username/post/:postID', async (req, res) => {
       res.render("404");
     }
 });
+
+router.get('/api/posts/search', async (req, res) => {
+  const { q } = req.query;
+  if (!q) {
+    return res.json([]); 
+  }
+
+  try {
+    const postsArray = await posts.find({
+      title: { $regex: q, $options: 'i' } 
+    })
+    .project({ author: 1, title: 1, text: 1, photoUrl: 1, createdAt: 1 })
+    .toArray();
+    const authorIds = [...new Set(postsArray.map(post => post.author))];
+    const authors = await users.find({ _id: { $in: authorIds } })
+      .project({ username: 1 })
+      .toArray();
+    const authorMap = {};
+    authors.forEach(user => {
+      authorMap[user._id.toString()] = user.username;
+    });
+    const postData = postsArray.map(post => ({
+      ...post,
+      authorUsername: authorMap[post.author.toString()] || "Unknown"
+    }));
+
+    res.json(postData);
+  } catch (err) {
+    console.error("Search error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
   
 module.exports = router;

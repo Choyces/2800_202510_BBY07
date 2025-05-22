@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Notifications</title>
+    <meta name="comp1800 template" content="My 1800 App">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="/css/notification.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+   
+</head>
+
+<body>
+    <nav id="navbarPlaceholder"></nav>
+  
+    
+    <div class="container mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Notifications</h1>
+        <form action="/notifications/readAll" method="post">
+          <button id="markAllReadBtn" class="btn btn-secondary mt-3">Mark All as Read</button>
+        </form>
+      </div>
+     
+      <% if (notifications.length) { %>
+        <ul class="list-group">
+          <% notifications.forEach(n => { %>
+            <li
+              class="list-group-item d-flex justify-content-between align-items-start
+                    <%= n.read ? 'bg-light' : 'fw-bold' %>"
+              data-id="<%= n._id.toString() %>"
+              data-click-url="/<%= currentUsername %>/post/<%= n.postId.toString() %>"
+            >
+              <!-- LEFT SIDE: avatar + text -->
+              <div class="d-flex align-items-center">
+                <img
+                  src="<%= n.senderAvatar %>"
+                  alt="<%= n.senderUsername %>"
+                  class="rounded-circle me-3 notif-avatar"
+                  width="40"
+                  height="40"
+                  data-profile-url="/<%= n.senderUsername %>"
+                >
+                <div>
+                  <% if (n.type === 'comment') { %>
+                    <i class="bi bi-chat-left-text"></i>
+                    <%= n.senderUsername %> commented on
+                  <% } else { %>
+                    <i class="bi bi-hand-thumbs-up"></i>
+                    <%= n.senderUsername %> liked
+                  <% } %>
+                  “<%= n.truncatedTitle %>”
+                  
+                  <% if (n.type === 'comment') { %>
+                    <div class="text-muted small mt-1">
+                      <%= n.truncatedComment %>
+                    </div>
+                  <% } %>
+                </div>
+              </div>
+
+              <!-- RIGHT SIDE: timestamp -->
+              <small class="notif-timestamp"><%= n.displayTime %></small>
+            </li>
+          <% }) %>
+        </ul>
+
+      <% } else { %>
+        <p class="text-muted">You have no new notifications.</p>
+      <% } %>
+    </div>
+    
+    <nav id="footerPlaceholder"></nav>
+
+
+    <script>
+      const currentUsername = '<%= currentUsername %>';
+    </script>
+    <script src="/js/skeleton.js"></script>
+    <script src="/js/notification.js"></script>
+    <script src="/js/footer.js"></script>
+    <script src="/js/navbar.js"></script>
+</body>
+
+</html>

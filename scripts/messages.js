@@ -1,59 +1,70 @@
 document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('conversationsList')) {
-    loadConversations();
+  const convList = document.getElementById('conversationsList');
+  if (convList) {
     initNewConv();
     initDeleteMode();
+    convList.querySelectorAll('.conversation-card').forEach(card => {
+      card.addEventListener('click', () => {
+        if (!deleteMode) {
+          window.location.href = `/inside_messages?conversationId=${card.dataset.id}`;
+        }
+      });
+    });
     const searchInput = document.getElementById('searchConvosInput');
     searchInput.addEventListener('input', () => {
       const term = searchInput.value.trim().toLowerCase();
-      const filtered = term
-        ? allConversations.filter(c =>
-            c.title.toLowerCase().includes(term)
-          )
-        : allConversations;
-      renderConversations(filtered);
+      document
+        .querySelectorAll('#conversationsList .conversation-card')
+        .forEach(card => {
+          const title = card
+            .querySelector('strong')
+            .textContent         
+            .trim()
+            .toLowerCase();
+          card.classList.toggle('d-none', !title.includes(term));
+        });
     });
   } else if (document.getElementById('messages')) {
     loadConversationMessages();
   }
 });
 
-window.addEventListener('pageshow', (event) => {
-  if (document.getElementById('conversationsList')) {
-    loadConversations();
+document.body.addEventListener('click', e => {
+  if (!deleteMode) return;
+  const icon = e.target.closest('i.delete-icon');
+  if (!icon) return;
+  e.stopPropagation();   
+  const id = icon.dataset.id || icon.parentElement.dataset.id;
+  if (toDelete.has(id)) {
+    toDelete.delete(id);
+  } else {
+    toDelete.add(id);
   }
+  refreshDeleteIcons();
 });
 
-const listContainer = document.getElementById('conversationsList');
-let selected = new Set();    
-let allConversations = [];
-let deleteMode = false;
-const toDelete = new Set();    
+function refreshDeleteIcons() {
+  document.querySelectorAll('.conversation-card').forEach(card => {
+    const id = card.dataset.id;
+    let icon = card.querySelector('.delete-icon');
 
-// Formats date of the last message sent.
-function formatTimestamp(dateStr) {
-  const d = new Date(dateStr);
-  const now = new Date();
-
-  if (d.toDateString() === now.toDateString()) {
-    let hrs = d.getHours();
-    const mins = String(d.getMinutes()).padStart(2, '0');
-    const ampm = hrs >= 12 ? 'pm' : 'am';
-    hrs = hrs % 12 || 12;
-    return `${hrs}:${mins} ${ampm}`;
-  }
-
-  const yesterday = new Date(now);
-  yesterday.setDate(yesterday.getDate() - 1);
-  if (d.toDateString() === yesterday.toDateString()) {
-    return 'Yesterday';
-  }
-
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  const yyyy = d.getFullYear();
-  return `${mm}/${dd}/${yyyy}`;
+    if (deleteMode) {
+      if (!icon) {
+        icon = document.createElement('i');
+        icon.classList.add('delete-icon', 'me-2');          
+        card.insertBefore(icon, card.firstChild);            
+      }
+      icon.classList.toggle('bi-circle', !toDelete.has(id));
+      icon.classList.toggle('bi-record-circle-fill', toDelete.has(id));
+      icon.classList.add('bi');
+    } else {
+      if (icon) icon.remove();
+    }
+  });
 }
+
+let deleteMode = false;
+const toDelete = new Set();
 
 // Initializes the New Conversation modal
 function initNewConv() {
@@ -66,9 +77,8 @@ function initNewConv() {
   const selectedUsers = document.getElementById('selectedUsers');
   const msgInput = document.getElementById('initialMessage');
   const sendBtn = document.getElementById('sendConvBtn');
-
-  // cache of last‐searched users for badge rendering
   const usersCache = new Map();
+  const selected = new Set();
 
   // Enables/disables the Send button
   function updateSendBtn() {
@@ -178,7 +188,7 @@ function initNewConv() {
     selectedUsers.innerHTML = '';
     msgInput.value = '';
     updateSendBtn();
-    await loadConversations();
+    window.location.reload();
   });
 }
 
@@ -200,7 +210,7 @@ function initDeleteMode() {
     deleteMode = !deleteMode;
     toDelete.clear();
     confirm.style.display = deleteMode ? 'block' : 'none';
-    loadConversations();
+    refreshDeleteIcons(); 
   });
   confirm.addEventListener('click', async () => {
     for (const id of toDelete) {
@@ -209,86 +219,8 @@ function initDeleteMode() {
     deleteMode = false;
     toDelete.clear();
     confirm.style.display = 'none';
-    await loadConversations();
-  });
-}
-
-// Fetch the (message)conversations list and all necessary info for displaying
-async function loadConversations() {
-  const [convosRes, countsRes] = await Promise.all([
-    fetch('/conversations'),
-    fetch('/notifications/messages')
-  ]);
-  const convos = await convosRes.json();
-  const counts = await countsRes.json();
-  const unreadMap = counts.reduce((m, c) => {
-    m[c._id] = c.unreadCount;
-    return m;
-  }, {});
-
-  allConversations = convos.map(conv => {
-    const unread = unreadMap[conv._id] || 0;
-    const title = conv.others.length === 1
-      ? conv.others[0].name
-      : conv.others.map(u => u.name).join(', ');
-    const lastMsg = conv.lastMessage || '—';
-    const ts = formatTimestamp(conv.updatedAt);
-    return { ...conv, unread, title, lastMsg, ts };
-  });
-
-  renderConversations(allConversations);
-}
-
-// Display the conversastion list
-function renderConversations(list) {
-  listContainer.innerHTML = '';
-  list.forEach(conv => {
-    const card = document.createElement('div');
-    card.className =
-      'conversation-card d-flex justify-content-between align-items-center p-3 mb-2 border-bottom';
-    card.dataset.title = conv.title.toLowerCase();
-
-    const deleteIconHtml = deleteMode
-      ? `<i class="bi bi-${toDelete.has(conv._id) ? 'record-circle-fill' : 'circle'} me-2" data-id="${conv._id}"></i>`
-      : '';
-
-    // add dot to title if unread
-    const titleInner = conv.unread > 0
-      ? `<span class="unread-dot-inline"></span>${escapeHtml(conv.title)}`
-      : escapeHtml(conv.title);
-
-    card.innerHTML = `
-      ${deleteIconHtml}
-      <div class="flex-grow-1 me-2">
-        <strong>${titleInner}</strong><br>
-        <span class="text-truncate d-block">${escapeHtml(conv.lastMsg)}</span>
-      </div>
-      <div class="flex-shrink-0 text-nowrap text-muted small">
-        ${conv.ts}
-      </div>
-    `;
-    card.addEventListener('click', () => {
-      if (!deleteMode) {
-        window.location = `/inside_messages?conversationId=${conv._id}`;
-      }
-    });
-    if (deleteMode) {
-      const icon = card.querySelector('i[data-id]');
-      if (icon) {
-        icon.addEventListener('click', e => {
-          e.stopPropagation();
-          const id = icon.dataset.id;
-          if (toDelete.has(id)) {
-            toDelete.delete(id);
-            icon.classList.replace('bi-record-circle-fill','bi-circle');
-          } else {
-            toDelete.add(id);
-            icon.classList.replace('bi-circle','bi-record-circle-fill');
-          }
-        });
-      }
-    }
-    listContainer.appendChild(card);
+    refreshDeleteIcons(); 
+    window.location.reload();
   });
 }
 
@@ -308,8 +240,20 @@ async function loadConversationMessages() {
   );
 
   // set title bar
-  document.getElementById('conversationTitle').textContent =
-    convo.others.map(u => u.name).join(', ');
+  const titleEl = document.getElementById('conversationTitle');
+  titleEl.innerHTML = convo.others.map(u => `
+    <a href="/${u.username}" class="d-inline-flex align-items-center me-3 text-decoration-none text-dark">
+      <img
+        src="${u.avatarUrl || '/img/default-avatar.png'}"
+        alt="${u.name}"
+        class="rounded-circle me-1"
+        width="35" height="35"
+      >
+      <span>
+        ${u.name}
+      </span>
+    </a>
+  `).join('');
 
   // fetch messages
   const messagesDiv = document.getElementById('messages');
@@ -349,6 +293,13 @@ async function loadConversationMessages() {
   // mark as read
   await fetch(`/conversations/${convoId}/read`, { method: 'POST' });
 
+  setTimeout(() => {
+    const container = document.getElementById('messagesContainer');
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, 0);
+
   // send logic: button + Enter + auto-grow
   const sendBtn = document.getElementById('sendButton');
   const inputEl = document.getElementById('messageInput');
@@ -379,9 +330,4 @@ async function loadConversationMessages() {
     }
   });
 }
-// escape HTML
-function escapeHtml(s) {
-  return s.replace(/[&<>"']/g, c =>
-    ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]
-  );
-}
+
