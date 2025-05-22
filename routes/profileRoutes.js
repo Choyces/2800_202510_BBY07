@@ -61,7 +61,7 @@ router.get('/post/:id', async (req, res) => {
 
     const post = await postCollection.findOne({ _id: new ObjectId(req.params.id) });
     if (!post) return res.status(404).send('Post not found');
-    const currentUserId = req.session.user ? req.session.user._id : null;
+    const currentUserId = req.session.userId || null;
 
     res.render('postDetail', { post:post, currentUserId:currentUserId ? currentUserId.toString() : null  });  
   } catch (err) {
@@ -75,8 +75,8 @@ router.get('/profile', async (req, res) => {
 
   const userId = req.session.userId;
   try {
-    const user = await users.findOne({ _id: new ObjectId(userId) });
-    const userPosts = await posts.find({ author: new ObjectId(userId) }).toArray();
+    const user = await userCollection.findOne({ _id: new ObjectId(userId) });
+    const userPosts = await postCollection.find({ author: new ObjectId(userId) }).toArray();
 
     res.render('profile', { user, posts: userPosts });
   } catch (err) {
@@ -84,6 +84,30 @@ router.get('/profile', async (req, res) => {
     res.status(500).send('error');
   }
 });
+
+//get username
+// router.get('/profile/data', async (req, res) => {
+//   if (!req.session.authenticated) {
+//     return res.status(401).json({ error: 'Not authenticated' });
+//   }
+
+//   try {
+//     const user = await userCollection.findOne(
+//       { _id: new ObjectId(req.session.userId) },
+//       { projection: { name: 1, email: 1 } } 
+//     );
+
+//     if (!user) {
+//       return res.status(404).json({ error: 'User not found' });
+//     }
+
+//     res.json({ user });
+//   } catch (err) {
+//     console.error('Error fetching user data:', err);
+//     res.status(500).json({ error: 'Server error' });
+//   }
+// });
+
 
 // POST /profile/update (Update profile info)
 router.post('/profile/update', async (req, res) => {
@@ -197,6 +221,4 @@ router.delete('/api/post/:id', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
-
-
 module.exports = router;
