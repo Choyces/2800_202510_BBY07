@@ -5,6 +5,7 @@ const router = express.Router();
 
 const { db } = require('../databaseconnection');
 const { ObjectId } = require('mongodb');
+const { v2: cloudinary }   = require('cloudinary');
 
 const userCollection = db.collection('users');
 const postCollection = db.collection('posts');
@@ -187,15 +188,12 @@ router.post('/profile/update', async (req, res) => {
   let avatarUrl = null;
 
   try {
-    // Save Base64 image if provided
     if (profileImage && profileImage.startsWith('data:image/')) {
-      const base64Data = profileImage.replace(/^data:image\/\w+;base64,/, '');
-      const buffer = Buffer.from(base64Data, 'base64');
-      const fileName = `avatar_${Date.now()}.png`;
-      const filePath = path.join(__dirname, '..', 'public', 'uploads', fileName);
-
-      fs.writeFileSync(filePath, buffer);
-      avatarUrl = `/uploads/${fileName}`;
+      const uploadResult = await cloudinary.uploader.upload(profileImage, {
+        folder:    'user-avatars',               
+        public_id: `avatar_${Date.now()}`        
+      });
+      avatarUrl = uploadResult.secure_url;      
     }
 
     const updateFields = {
