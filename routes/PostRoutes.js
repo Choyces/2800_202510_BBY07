@@ -1,21 +1,31 @@
-const express  = require('express');
-const router   = express.Router();
+const express = require('express');
+const router = express.Router();
 const { ObjectId } = require('mongodb');
-const { db }   = require('../databaseconnection');
-const posts   = db.collection('posts'); 
-const users      = db.collection('users');
-const path    = require('path');
+const { db } = require('../databaseconnection');
+const posts = db.collection('posts'); 
+const users = db.collection('users');
+const path = require('path');
+const { v2: cloudinary } = require('cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) =>
-    cb(null, path.join(__dirname, '..', 'public', 'uploads')),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, Date.now() + ext);
+cloudinary.config({
+  cloud_name:    process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:       process.env.CLOUDINARY_API_KEY,
+  api_secret:    process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder:    'my-app-uploads',                          
+    public_id: (req, file) => Date.now() + path.extname(file.originalname),
+    format:    async (req, file) => file.mimetype.split('/')[1] 
   }
 });
+
 const upload = multer({ storage });
+
 
 //get EVERY posts data and stuff
 router.get('/post/data', async (req, res) => {
@@ -64,19 +74,19 @@ router.post('/makepost', upload.single('photo'),
         return res.redirect('/makepost');
       }
 
-      const photoUrl = req.file ? `/uploads/${req.file.filename}` : null;
+      const photoUrl = req.file ? req.file.path : null;
 
       const now = new Date();
       const newPost = {
-        author:   new ObjectId(userId),
+        author: new ObjectId(userId),
         title,
-        text:     description,
+        text: description,
         photoUrl,             
         comments: [],
         stats: {
           views: 0,
           commentCount: 0,
-          likeCount:    0
+          likeCount: 0
         },
         createdAt: now,
         updatedAt: now
