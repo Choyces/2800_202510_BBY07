@@ -98,7 +98,7 @@ async function showLikebutton() {
   //like button function
 async function likePost() {
   const postID = document.querySelector('#postContainer').getAttribute('data-post-id');
-  const likeButton = document.getElementById('likebutton');
+  const likeButton = document.getElementById('likebutton'); 
 
   try {
     const res = await fetch(`/like/${postID}`, {
@@ -204,32 +204,6 @@ async function displayUsername() {
     if (fallback) fallback.innerText = "Guest";
   }
 }
-
-// // Fetch and display only posts from followed users
-// async function displayFollowedPosts() {
-//   const cardTemplate = document.getElementById("postCardTemplate");
-//   const container = document.getElementById("posts-go-here");
-//   if (!cardTemplate || !container) return;
-//   container.innerHTML = "";
-
-//   try {
-//     const res = await fetch("/post/following"); // Backend should return followed users' posts
-//     if (!res.ok) throw new Error("Failed to fetch followed posts");
-//     const postsArray = await res.json();
-
-//     if (postsArray.length === 0) {
-//       container.innerHTML = `<p class="text-muted text-center">No posts from people you follow.</p>`;
-//       return;
-//     }
-
-//     for (const post of postsArray) {
-//       const newCard = await processSinglePost(post, cardTemplate);
-//       container.appendChild(newCard);
-//     }
-//   } catch (err) {
-//     console.error("Error displaying followed posts:", err);
-//   }
-// }
 
 // Handle filter button clicks
 function setupFilterButtons() {
