@@ -1,7 +1,7 @@
 function loadSkeleton() {
     const isAuthenticated = !!document.cookie.match(/session/);
 
-    const navbarFile = isAuthenticated ? '/text/nav_after_login.html' : '/text/nav_before_login.html';
+    const navbarFile = '/text/nav.html';
     const footerFile = '/text/footer.html';
 
     // Load navbar
