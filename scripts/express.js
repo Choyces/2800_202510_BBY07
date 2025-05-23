@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 async function getBotResponse(userMessage, event) {
-  event.preventDefault()
+  event.preventDefault();
 
   
   const API_KEY = "AIzaSyAUZyyox_2VLvFK9cjqcl4Fy7Tjq3byfik";
@@ -39,7 +39,7 @@ document.getElementById("messages").textContent = botMessage;
 
 
 
-   console.log(botMessage)
+   console.log(botMessage);
   } catch (error) {
     console.error("Error:", error);
     appendMessage(
